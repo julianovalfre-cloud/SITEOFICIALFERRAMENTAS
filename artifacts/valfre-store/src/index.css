@@ -55,57 +55,49 @@
   
   --radius: 0.5rem;
 
-  /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
-
-  /* Light Theme - Clean Industrial E-commerce */
-  --background: 210 20% 98%;
-  --foreground: 215 50% 15%;
-  --border: 212 22% 85%;
+  --background: 0 0% 97%;
+  --foreground: 215 50% 12%;
   
   --card: 0 0% 100%;
-  --card-foreground: 215 50% 15%;
-  --card-border: 212 22% 90%;
+  --card-foreground: 215 50% 12%;
+  --card-border: 214 20% 88%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 215 50% 15%;
-  --popover-border: 212 22% 90%;
+  --popover-foreground: 215 50% 12%;
+  --popover-border: 214 20% 88%;
 
-  /* Brand Primary: Navy Blue */
   --primary: 215 50% 20%;
   --primary-foreground: 0 0% 100%;
   --primary-border: hsl(from hsl(var(--primary)) h s calc(l - 10));
 
-  /* Brand Secondary: Orange */
   --secondary: 25 80% 51%;
   --secondary-foreground: 0 0% 100%;
   --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l - 10));
 
-  --muted: 212 22% 92%;
-  --muted-foreground: 215 16% 47%;
-  --muted-border: 212 22% 85%;
+  --muted: 210 20% 94%;
+  --muted-foreground: 215 20% 45%;
+  --muted-border: 210 20% 85%;
 
-  /* Accent: Bright Orange */
-  --accent: 25 90% 55%;
+  --accent: 25 80% 51%;
   --accent-foreground: 0 0% 100%;
   --accent-border: hsl(from hsl(var(--accent)) h s calc(l - 10));
 
-  --destructive: 0 84% 60%;
+  --destructive: 0 80% 50%;
   --destructive-foreground: 0 0% 100%;
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l - 10));
 
-  --input: 212 22% 85%;
-  --ring: 25 80% 51%; /* Focus rings use brand orange */
+  --border: 214 20% 88%;
+  --input: 214 20% 88%;
+  --ring: 25 80% 51%;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .dark {
-  /* Minimal dark mode support if needed, mostly sticking to light mode for standard e-commerce */
   --background: 215 50% 10%;
   --foreground: 210 20% 98%;
   --border: 215 30% 20%;
@@ -127,11 +119,11 @@
   --muted: 215 30% 18%;
   --muted-foreground: 215 20% 65%;
 
-  --accent: 25 90% 55%;
+  --accent: 25 80% 51%;
   --accent-foreground: 0 0% 100%;
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 80% 50%;
+  --destructive-foreground: 0 0% 100%;
 
   --input: 215 30% 25%;
   --ring: 25 80% 51%;
