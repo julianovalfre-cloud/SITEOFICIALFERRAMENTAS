@@ -2,22 +2,26 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ProductCard } from "@/components/product/product-card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useListProducts, useGetFeaturedProducts, useListCategories } from "@workspace/api-client-react";
-import { ArrowRight, Wrench, Zap, PaintRoller, ShieldCheck, Truck, CreditCard, Hammer, Clock, Star, Flame, Trophy } from "lucide-react";
+import {
+  ArrowRight, Wrench, Zap, PaintRoller, ShieldCheck,
+  Truck, CreditCard, Hammer, Clock, Star, Flame, Trophy, Phone, Package
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 
 function ProductGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-card rounded-2xl border border-border p-4 flex flex-col h-[400px]">
-          <Skeleton className="w-full aspect-square rounded-xl mb-4" />
-          <Skeleton className="w-1/3 h-3 mb-2" />
-          <Skeleton className="w-full h-10 mb-4" />
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="bg-white rounded-xl border border-border p-3 flex flex-col h-[340px]">
+          <Skeleton className="w-full aspect-square rounded-lg mb-3" />
+          <Skeleton className="w-1/3 h-2.5 mb-2" />
+          <Skeleton className="w-full h-8 mb-3" />
           <div className="mt-auto">
-            <Skeleton className="w-1/2 h-6 mb-3" />
-            <Skeleton className="w-full h-10 rounded-md" />
+            <Skeleton className="w-1/2 h-6 mb-2" />
+            <Skeleton className="w-full h-9 rounded-lg" />
           </div>
         </div>
       ))}
@@ -25,278 +29,383 @@ function ProductGridSkeleton() {
   );
 }
 
+const CATEGORY_IMAGES: Record<string, string> = {
+  "ferramentas-manuais": "https://images.unsplash.com/photo-1590739293931-a8f83d00bbf6?w=300&q=70",
+  "ferramentas-eletricas": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=300&q=70",
+  "construcao": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=300&q=70",
+  "pintura": "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=300&q=70",
+  "eletrica": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=300&q=70",
+  "medicao": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&q=70",
+  "epi": "https://images.unsplash.com/photo-1607434472257-d9f8e57a643d?w=300&q=70",
+  "acessorios": "https://images.unsplash.com/photo-1610414717393-a5d9a7fabb78?w=300&q=70",
+  "automotivo": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=300&q=70",
+  "jardinagem": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&q=70",
+};
+
+const FALLBACK_CATS = [
+  { id: "1", slug: "ferramentas-manuais", name: "Ferramentas Manuais", icon: "🔧" },
+  { id: "2", slug: "ferramentas-eletricas", name: "Ferramentas Elétricas", icon: "⚡" },
+  { id: "3", slug: "construcao", name: "Construção", icon: "🧱" },
+  { id: "4", slug: "pintura", name: "Pintura", icon: "🪣" },
+  { id: "5", slug: "eletrica", name: "Elétrica", icon: "💡" },
+  { id: "6", slug: "automotivo", name: "Automotivo", icon: "🚗" },
+  { id: "7", slug: "epi", name: "EPIs / Segurança", icon: "🦺" },
+  { id: "8", slug: "acessorios", name: "Acessórios", icon: "🔩" },
+];
+
+const BRANDS = ["Bosch", "DeWalt", "Makita", "Tramontina", "Stanley", "Gedore", "Black+Decker", "Norton", "Vonder", "Worker"];
+
 export default function Home() {
   const { data: featured, isLoading: isLoadingFeatured } = useGetFeaturedProducts();
-  const { data: listBest, isLoading: isLoadingBest } = useListProducts({ limit: 4, sortBy: 'price_desc' });
-  const { data: listNew, isLoading: isLoadingNew } = useListProducts({ limit: 4, sortBy: 'newest' });
+  const { data: listBest } = useListProducts({ limit: 5, sortBy: "price_desc" });
+  const { data: listNew } = useListProducts({ limit: 5, sortBy: "newest" });
   const { data: categories, isLoading: isLoadingCats } = useListCategories();
 
-  const bestSellers = featured?.bestSellers?.length ? featured.bestSellers.slice(0,4) : listBest?.products?.slice(0,4) || [];
-  const newArrivals = featured?.newArrivals?.length ? featured.newArrivals.slice(0,4) : listNew?.products?.slice(0,4) || [];
-
-  // Fallback categories if API fails
-  const displayCats = categories?.length ? categories.slice(0,8) : [
-    { id: '1', slug: 'ferramentas-manuais', name: 'Manuais', icon: '🔧' },
-    { id: '2', slug: 'ferramentas-eletricas', name: 'Elétricas', icon: '⚡' },
-    { id: '3', slug: 'construcao', name: 'Construção', icon: '🧱' },
-    { id: '4', slug: 'jardinagem', name: 'Jardinagem', icon: '🌱' },
-    { id: '5', slug: 'medicao', name: 'Medição', icon: '📏' },
-    { id: '6', slug: 'solda', name: 'Solda', icon: '🔥' },
-    { id: '7', slug: 'epi', name: 'EPIs', icon: '🦺' },
-    { id: '8', slug: 'acessorios', name: 'Acessórios', icon: '🔩' },
-  ];
+  const bestSellers = featured?.bestSellers?.length
+    ? featured.bestSellers.slice(0, 5)
+    : listBest?.products?.slice(0, 5) || [];
+  const newArrivals = featured?.newArrivals?.length
+    ? featured.newArrivals.slice(0, 5)
+    : listNew?.products?.slice(0, 5) || [];
+  const displayCats = (categories?.length ? categories : FALLBACK_CATS).slice(0, 8);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      
-      {/* Announcement Bar */}
-      <div className="bg-secondary text-secondary-foreground overflow-hidden whitespace-nowrap h-10 flex items-center relative">
-        <div className="animate-[marquee_20s_linear_infinite] flex whitespace-nowrap gap-16 md:gap-32 w-max text-sm font-bold">
-          <span className="flex items-center gap-2"><Trophy className="w-4 h-4"/> 15.000+ Produtos em Estoque</span>
-          <span className="flex items-center gap-2"><Truck className="w-4 h-4"/> Frete GRÁTIS acima de R$ 199,00</span>
-          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4"/> Parcele em até 12x sem juros</span>
-          <span className="flex items-center gap-2"><Zap className="w-4 h-4"/> Entrega expressa para SP Capital</span>
-          {/* Duplicate for smooth scroll */}
-          <span className="flex items-center gap-2"><Trophy className="w-4 h-4"/> 15.000+ Produtos em Estoque</span>
-          <span className="flex items-center gap-2"><Truck className="w-4 h-4"/> Frete GRÁTIS acima de R$ 199,00</span>
-          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4"/> Parcele em até 12x sem juros</span>
-          <span className="flex items-center gap-2"><Zap className="w-4 h-4"/> Entrega expressa para SP Capital</span>
+
+      {/* ── Marquee Announcement Bar ── */}
+      <div className="bg-secondary text-white overflow-hidden h-9 flex items-center relative shrink-0">
+        <div className="animate-marquee flex whitespace-nowrap gap-20 w-max text-sm font-bold">
+          <span className="flex items-center gap-2"><Trophy className="w-4 h-4" /> 15.000+ Produtos em Estoque</span>
+          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Frete GRÁTIS acima de R$ 199,00</span>
+          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Parcele em até 12x sem juros</span>
+          <span className="flex items-center gap-2"><Zap className="w-4 h-4" /> Entrega expressa para SP Capital</span>
+          <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> Televendas: (11) 9999-9999</span>
+          {/* duplicate for seamless loop */}
+          <span className="flex items-center gap-2"><Trophy className="w-4 h-4" /> 15.000+ Produtos em Estoque</span>
+          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Frete GRÁTIS acima de R$ 199,00</span>
+          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Parcele em até 12x sem juros</span>
+          <span className="flex items-center gap-2"><Zap className="w-4 h-4" /> Entrega expressa para SP Capital</span>
+          <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> Televendas: (11) 9999-9999</span>
         </div>
       </div>
 
       <Header />
-      
+
       <main className="flex-1">
-        
-        {/* NEW HERO SECTION */}
-        <section className="relative bg-[#0b162c] pt-12 pb-16 md:py-20 overflow-hidden">
-          {/* Decorative Background Elements */}
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-secondary/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/40 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05]" />
 
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-8">
-              
-              {/* Text Content */}
-              <div className="flex-1 text-center lg:text-left pt-8 lg:pt-0">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-sm font-bold tracking-wider mb-6">
-                  <Flame className="w-4 h-4 fill-current" /> OFERTAS DE INVERNO
-                </div>
-                <h1 className="text-5xl md:text-7xl font-display font-extrabold leading-[1.1] mb-6 text-white tracking-tight drop-shadow-sm">
-                  POTÊNCIA MÁXIMA <br className="hidden md:block"/>
-                  PARA <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-yellow-400">SUA OBRA</span>
-                </h1>
-                <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  As melhores marcas de ferramentas elétricas e manuais com preços imbatíveis. Equipamentos profissionais para resultados perfeitos.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                  <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-bold px-10 h-14 text-lg border-0 shadow-[0_8px_20px_rgba(232,101,26,0.3)] hover:-translate-y-1 transition-all rounded-xl">
-                    Ver Ofertas
-                  </Button>
-                  <Button size="lg" variant="outline" className="bg-white/5 text-white border-white/20 hover:bg-white/10 hover:text-white h-14 px-8 font-bold rounded-xl backdrop-blur-sm">
-                    Explorar Categorias
-                  </Button>
-                </div>
+        {/* ── HERO ── */}
+        <section className="relative bg-[#0b162c] overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0b162c] via-[#1a2d4f] to-[#0d2040]" />
+          <div className="absolute top-0 right-0 w-[900px] h-[900px] bg-secondary/10 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-900/30 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
-                {/* Stats Row */}
-                <div className="grid grid-cols-3 gap-4 mt-12 pt-10 border-t border-white/10 max-w-2xl mx-auto lg:mx-0">
-                  <div>
-                    <h4 className="text-3xl font-bold text-white mb-1">15k+</h4>
-                    <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Produtos</p>
-                  </div>
-                  <div>
-                    <h4 className="text-3xl font-bold text-white mb-1 flex items-center justify-center lg:justify-start gap-1">4.9<Star className="w-5 h-5 text-amber-400 fill-current" /></h4>
-                    <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Avaliações</p>
-                  </div>
-                  <div>
-                    <h4 className="text-3xl font-bold text-white mb-1">24h</h4>
-                    <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Entrega Expressa</p>
-                  </div>
-                </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-6 py-14 md:py-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
+            {/* Left */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/15 border border-secondary/25 text-secondary text-xs font-extrabold tracking-widest uppercase mb-5">
+                <Flame className="w-3.5 h-3.5 fill-current" /> Ofertas Imperdíveis
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold leading-[1.05] text-white mb-5 tracking-tight">
+                POTÊNCIA<br />
+                MÁXIMA<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-orange-400 to-yellow-400">
+                  SUA OBRA
+                </span>
+              </h1>
+              <p className="text-base md:text-lg text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                As melhores marcas de ferramentas elétricas e manuais. Preços imbatíveis com entrega para todo o Brasil.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <Link href="/categoria/ferramentas-eletricas">
+                  <Button size="lg" className="bg-secondary hover:bg-orange-600 text-white font-extrabold px-8 h-13 text-base border-0 shadow-[0_6px_24px_rgba(232,101,26,0.4)] hover:-translate-y-0.5 transition-all rounded-xl w-full sm:w-auto">
+                    Ver Ofertas <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/categoria/ferramentas-manuais">
+                  <Button size="lg" variant="outline" className="bg-white/5 text-white border-white/20 hover:bg-white/10 hover:text-white h-13 px-8 font-bold rounded-xl backdrop-blur-sm w-full sm:w-auto">
+                    Ver Categorias
+                  </Button>
+                </Link>
               </div>
 
-              {/* Image Content */}
-              <div className="flex-1 relative w-full max-w-lg lg:max-w-none perspective-[1000px]">
-                <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 rotate-y-[-5deg] rotate-x-[5deg] hover:rotate-0 transition-transform duration-700">
-                  <img 
-                    src="https://images.unsplash.com/photo-1587924025-bdc38eb22b95?w=800&q=80" 
-                    alt="Ferramentas Profissionais" 
-                    className="w-full h-auto object-cover aspect-[4/3]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              {/* Stats */}
+              <div className="flex gap-8 mt-10 pt-8 border-t border-white/10 justify-center lg:justify-start">
+                <div className="text-center lg:text-left">
+                  <p className="text-2xl font-extrabold text-white">15k+</p>
+                  <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Produtos</p>
                 </div>
-                
-                {/* Floating Badges */}
-                <div className="absolute -top-6 -right-6 bg-white rounded-2xl p-4 shadow-2xl animate-bounce-slow border border-slate-100 hidden md:flex items-center gap-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                    <Truck className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase">Entrega Rápida</p>
-                    <p className="text-sm font-extrabold text-slate-800">Todo o Brasil</p>
-                  </div>
+                <div className="text-center lg:text-left">
+                  <p className="text-2xl font-extrabold text-white flex items-center gap-1 justify-center lg:justify-start">
+                    4.9 <Star className="w-4 h-4 text-amber-400 fill-current" />
+                  </p>
+                  <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Avaliações</p>
                 </div>
-                
-                <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-4 shadow-2xl animate-pulse-slow border border-slate-100 hidden md:flex items-center gap-3">
-                  <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center text-secondary">
-                    <ShieldCheck className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase">Compra Segura</p>
-                    <p className="text-sm font-extrabold text-slate-800">100% Garantida</p>
-                  </div>
+                <div className="text-center lg:text-left">
+                  <p className="text-2xl font-extrabold text-white">Grátis</p>
+                  <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Frete &gt; R$199</p>
                 </div>
               </div>
-
             </div>
-          </div>
-        </section>
 
-        {/* Categories Section */}
-        <section className="py-16 bg-white relative -mt-8 rounded-t-[40px] z-20">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-display font-extrabold text-primary mb-3">Encontre o que precisa</h2>
-              <p className="text-muted-foreground font-medium">Navegue pelas nossas principais categorias</p>
-            </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-              {isLoadingCats ? (
-                Array.from({length: 8}).map((_, i) => <Skeleton key={i} className="aspect-square rounded-2xl" />)
-              ) : (
-                displayCats.map((cat, i) => (
-                  <Link key={i} href={`/categoria/${cat.slug}`} className="bg-slate-50 rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-primary hover:text-white hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group border border-slate-100 cursor-pointer">
-                    <div className="text-4xl group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">
-                      {cat.icon || '🔧'}
-                    </div>
-                    <span className="font-bold text-sm text-center leading-tight group-hover:text-white text-slate-700">{cat.name}</span>
-                  </Link>
-                ))
-              )}
-            </div>
-          </div>
-        </section>
+            {/* Right – hero image */}
+            <div className="flex-1 relative max-w-sm lg:max-w-none w-full">
+              <div className="rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.6)] border border-white/10 relative">
+                <img
+                  src="https://images.unsplash.com/photo-1587924025-bdc38eb22b95?w=800&q=80"
+                  alt="Ferramentas Profissionais"
+                  className="w-full h-auto object-cover aspect-[4/3]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              </div>
 
-        {/* Best Sellers Section */}
-        <section className="py-16 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-end justify-between mb-10">
-              <div className="flex items-center gap-4">
-                <div className="w-2 h-10 bg-secondary rounded-full"></div>
+              {/* Floating card – delivery */}
+              <div className="absolute -top-5 -right-4 bg-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 hidden md:flex">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <Truck className="w-5 h-5 text-green-600" />
+                </div>
                 <div>
-                  <h2 className="text-3xl font-display font-extrabold text-primary uppercase tracking-tight">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Entrega</p>
+                  <p className="text-sm font-extrabold text-slate-800">Todo Brasil</p>
+                </div>
+              </div>
+
+              {/* Floating card – secure */}
+              <div className="absolute -bottom-5 -left-4 bg-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 hidden md:flex">
+                <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center">
+                  <ShieldCheck className="w-5 h-5 text-secondary" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Garantia</p>
+                  <p className="text-sm font-extrabold text-slate-800">100% Segura</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Trust Bar ── */}
+        <section className="bg-white border-b border-slate-100 shadow-sm">
+          <div className="max-w-7xl mx-auto px-6 py-5 grid grid-cols-2 md:grid-cols-4 gap-4 divide-x divide-slate-100">
+            {[
+              { icon: Truck, color: "text-blue-600 bg-blue-50", title: "Entrega Expressa", sub: "Para todo o Brasil" },
+              { icon: CreditCard, color: "text-secondary bg-secondary/10", title: "Parcele em 12x", sub: "Sem juros no cartão" },
+              { icon: ShieldCheck, color: "text-green-600 bg-green-50", title: "Compra Segura", sub: "100% protegida" },
+              { icon: Package, color: "text-purple-600 bg-purple-50", title: "Troca Fácil", sub: "7 dias garantidos" },
+            ].map(({ icon: Icon, color, title, sub }, i) => (
+              <div key={i} className="flex items-center gap-3 justify-center py-1 first:pl-0">
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${color}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm text-foreground">{title}</p>
+                  <p className="text-xs text-muted-foreground">{sub}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── CATEGORIES – Image Cards (lojadomecanico style) ── */}
+        <section className="py-10 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-display font-extrabold text-primary">Departamentos</h2>
+                <p className="text-muted-foreground text-sm mt-0.5">Encontre o que precisa rapidamente</p>
+              </div>
+              <Link href="/categoria/todas" className="text-secondary text-sm font-bold hover:underline flex items-center gap-1">
+                Ver todos <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+              {isLoadingCats
+                ? Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="aspect-[3/4] rounded-xl" />)
+                : displayCats.map((cat) => {
+                  const imgSrc = CATEGORY_IMAGES[cat.slug] || `https://images.unsplash.com/photo-1590739293931-a8f83d00bbf6?w=300&q=70`;
+                  return (
+                    <Link
+                      key={cat.id}
+                      href={`/categoria/${cat.slug}`}
+                      className="group relative rounded-xl overflow-hidden border border-slate-200 hover:border-secondary hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+                    >
+                      <div className="aspect-[3/4] overflow-hidden bg-slate-100">
+                        <img
+                          src={imgSrc}
+                          alt={cat.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 brightness-90 group-hover:brightness-100"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                        <p className="text-white font-bold text-xs leading-tight text-center drop-shadow-md">
+                          {cat.name}
+                        </p>
+                      </div>
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="bg-secondary text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                          VER
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── BEST SELLERS ── */}
+        <section className="py-12 bg-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-end justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-9 bg-secondary rounded-full" />
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-display font-extrabold text-primary uppercase tracking-tight">
                     Mais Vendidos
                   </h2>
-                  <p className="text-sm text-muted-foreground mt-1 font-medium">Os queridinhos dos profissionais</p>
+                  <p className="text-muted-foreground text-sm mt-0.5 font-medium">Os favoritos dos profissionais</p>
                 </div>
               </div>
-              <Link href="/categoria/destaques" className="text-secondary font-bold hover:bg-secondary/10 px-4 py-2 rounded-lg transition-colors flex items-center text-sm border border-secondary/20">
-                Ver todos <ArrowRight className="w-4 h-4 ml-2" />
+              <Link href="/categoria/destaques" className="hidden sm:flex items-center gap-1.5 text-secondary font-bold text-sm hover:bg-secondary/5 px-4 py-2 rounded-lg transition-colors border border-secondary/20">
+                Ver todos <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
-            {isLoadingBest ? (
-              <ProductGridSkeleton />
-            ) : bestSellers.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                {bestSellers.map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white rounded-2xl p-12 text-center text-muted-foreground border border-dashed border-border shadow-sm">
-                Nenhum produto em destaque no momento.
-              </div>
-            )}
+            {isLoadingFeatured
+              ? <ProductGridSkeleton />
+              : bestSellers.length > 0
+                ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                    {bestSellers.map(product => <ProductCard key={product.id} product={product} />)}
+                  </div>
+                )
+                : (
+                  <div className="bg-muted rounded-xl p-12 text-center text-muted-foreground border border-dashed">
+                    Nenhum produto em destaque no momento.
+                  </div>
+                )
+            }
           </div>
         </section>
-        
-        {/* Promotional Banner */}
-        <section className="py-16 bg-slate-50">
+
+        {/* ── PROMO BANNER ── */}
+        <section className="py-6 bg-slate-50">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="rounded-[32px] overflow-hidden relative min-h-[340px] flex items-center p-8 md:p-16 shadow-2xl bg-gradient-to-br from-primary via-[#1a3668] to-[#122445]">
-               {/* Diagonal styling */}
-               <div className="absolute top-0 right-0 w-[60%] h-full bg-secondary skew-x-12 translate-x-20 opacity-90 hidden md:block"></div>
-               
-               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-               
-               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full gap-10">
-                 <div className="max-w-lg text-white">
-                   <Badge className="bg-white text-primary mb-6 hover:bg-white border-0 font-black tracking-widest px-3 py-1">SEMANA DO CONSUMIDOR</Badge>
-                   <h2 className="text-5xl md:text-6xl font-display font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 drop-shadow-sm">ATÉ 60% OFF</h2>
-                   <h3 className="text-2xl md:text-3xl font-display font-bold mb-6 text-yellow-400">Em toda linha de Elétricas</h3>
-                   <p className="mb-8 opacity-90 text-lg leading-relaxed font-medium">As melhores furadeiras, parafusadeiras e serras com preços que você nunca viu.</p>
-                   
-                   <div className="flex items-center gap-6">
-                     <Button className="bg-secondary text-white border-0 hover:bg-white hover:text-secondary transition-all px-8 h-14 font-extrabold text-lg shadow-[0_0_20px_rgba(232,101,26,0.5)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] rounded-xl">
-                       Aproveitar Agora
-                     </Button>
-                     <div className="hidden sm:flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10">
-                       <Clock className="w-5 h-5 text-secondary" />
-                       <div className="font-mono font-bold text-lg tracking-wider">
-                         2d 14h 32m
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-                 
-                 <div className="w-full max-w-[300px] md:max-w-[400px] relative z-10 perspective-[1000px]">
-                   <img 
-                     src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80" 
-                     alt="Ferramenta em Promoção" 
-                     className="w-full h-auto object-cover rounded-2xl shadow-2xl rotate-y-[-10deg] border-4 border-white/20"
-                   />
-                 </div>
-               </div>
+            <div className="relative rounded-2xl overflow-hidden min-h-[260px] md:min-h-[300px] flex items-center shadow-xl">
+              {/* BG layers */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#0b162c] via-primary to-[#1a3668]" />
+              <div className="absolute right-0 top-0 bottom-0 w-1/2 hidden md:block overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=700&q=75"
+                  alt="Ferramentas em Promoção"
+                  className="w-full h-full object-cover opacity-40"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/60 to-transparent" />
+              </div>
+
+              <div className="relative z-10 p-8 md:p-14 max-w-2xl">
+                <Badge className="bg-secondary text-white border-0 font-extrabold tracking-widest text-xs mb-5 px-3 py-1">
+                  SEMANA DO CONSUMIDOR
+                </Badge>
+                <h2 className="text-5xl md:text-7xl font-display font-black text-white mb-2 leading-none tracking-tight">
+                  ATÉ 60% OFF
+                </h2>
+                <h3 className="text-lg md:text-xl font-bold text-yellow-400 mb-5">
+                  Em toda linha de Ferramentas Elétricas
+                </h3>
+                <p className="text-slate-300 mb-7 text-sm leading-relaxed max-w-md">
+                  As melhores furadeiras, parafusadeiras e serras com preços que você nunca viu. Aproveite antes que acabe!
+                </p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link href="/categoria/ferramentas-eletricas">
+                    <Button className="bg-secondary hover:bg-orange-600 text-white font-extrabold px-8 h-12 text-base shadow-[0_0_24px_rgba(232,101,26,0.5)] hover:shadow-[0_0_32px_rgba(232,101,26,0.7)] transition-all rounded-xl border-0">
+                      Aproveitar Agora
+                    </Button>
+                  </Link>
+                  <div className="flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10">
+                    <Clock className="w-4 h-4 text-secondary" />
+                    <span className="font-mono font-bold text-white tracking-wider text-sm">2d 14h 32m</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* New Arrivals Section */}
-        <section className="py-16 bg-white">
+        {/* ── NEW ARRIVALS ── */}
+        <section className="py-12 bg-white border-t border-slate-100">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-end justify-between mb-10">
-              <div className="flex items-center gap-4">
-                <div className="w-2 h-10 bg-primary rounded-full"></div>
+            <div className="flex items-end justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-9 bg-primary rounded-full" />
                 <div>
-                  <h2 className="text-3xl font-display font-extrabold text-primary uppercase tracking-tight">
+                  <h2 className="text-2xl md:text-3xl font-display font-extrabold text-primary uppercase tracking-tight">
                     Novidades
                   </h2>
-                  <p className="text-sm text-muted-foreground mt-1 font-medium">Acabaram de chegar na loja</p>
+                  <p className="text-muted-foreground text-sm mt-0.5 font-medium">Acabaram de chegar</p>
                 </div>
               </div>
-              <Link href="/categoria/lancamentos" className="text-primary font-bold hover:bg-primary/10 px-4 py-2 rounded-lg transition-colors flex items-center text-sm border border-primary/20">
-                Ver lançamentos <ArrowRight className="w-4 h-4 ml-2" />
+              <Link href="/categoria/lancamentos" className="hidden sm:flex items-center gap-1.5 text-primary font-bold text-sm hover:bg-primary/5 px-4 py-2 rounded-lg transition-colors border border-primary/20">
+                Ver lançamentos <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
-            {isLoadingNew ? (
-              <ProductGridSkeleton />
-            ) : newArrivals.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                {newArrivals.map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="bg-slate-50 rounded-2xl p-12 text-center text-muted-foreground border border-dashed border-border">
-                Nenhum lançamento no momento.
-              </div>
-            )}
+            {isLoadingFeatured
+              ? <ProductGridSkeleton />
+              : newArrivals.length > 0
+                ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                    {newArrivals.map(product => <ProductCard key={product.id} product={product} />)}
+                  </div>
+                )
+                : (
+                  <div className="bg-slate-50 rounded-xl p-12 text-center text-muted-foreground border border-dashed">
+                    Nenhum lançamento no momento.
+                  </div>
+                )
+            }
           </div>
         </section>
 
-        {/* Featured Brands */}
-        <section className="py-16 bg-slate-100 border-t border-slate-200 overflow-hidden">
+        {/* ── 2-COLUMN BANNERS ── */}
+        <section className="py-8 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href="/categoria/epi" className="group relative rounded-2xl overflow-hidden h-44 shadow-md hover:shadow-xl transition-shadow">
+              <img src="https://images.unsplash.com/photo-1607434472257-d9f8e57a643d?w=600&q=70" alt="EPIs" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/40" />
+              <div className="absolute inset-0 flex flex-col justify-center p-7">
+                <Badge className="bg-secondary text-white border-0 font-bold text-xs w-fit mb-2">DESTAQUE</Badge>
+                <h3 className="text-white font-display font-extrabold text-2xl mb-1 leading-tight">EPIs & Segurança</h3>
+                <p className="text-white/80 text-sm">Proteja-se com o melhor equipamento</p>
+              </div>
+            </Link>
+            <Link href="/categoria/automotivo" className="group relative rounded-2xl overflow-hidden h-44 shadow-md hover:shadow-xl transition-shadow">
+              <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=70" alt="Automotivo" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#111]/90 to-[#111]/40" />
+              <div className="absolute inset-0 flex flex-col justify-center p-7">
+                <Badge className="bg-secondary text-white border-0 font-bold text-xs w-fit mb-2">NOVO</Badge>
+                <h3 className="text-white font-display font-extrabold text-2xl mb-1 leading-tight">Linha Automotiva</h3>
+                <p className="text-white/80 text-sm">Ferramentas para mecânicos profissionais</p>
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* ── BRANDS STRIP ── */}
+        <section className="py-10 bg-white border-t border-slate-100">
           <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-center text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-10">
-              Trabalhamos com as melhores marcas
-            </h2>
-            <div className="flex overflow-x-auto pb-6 hide-scrollbar gap-6 snap-x snap-mandatory">
-              {['Bosch', 'DeWalt', 'Makita', 'Tramontina', 'Stanley', 'Gedore', 'Black+Decker', 'Norton'].map((brand, i) => (
-                <div key={i} className="snap-center shrink-0 w-40 h-20 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center hover:border-secondary hover:shadow-md transition-all cursor-pointer group">
-                  <span className="font-display font-black text-2xl text-slate-300 group-hover:text-primary transition-colors tracking-tighter">
+            <p className="text-center text-xs font-extrabold text-slate-400 uppercase tracking-[0.25em] mb-7">
+              Trabalhamos com as melhores marcas do mercado
+            </p>
+            <div className="flex overflow-x-auto hide-scrollbar gap-4 pb-2">
+              {BRANDS.map((brand, i) => (
+                <div
+                  key={i}
+                  className="shrink-0 h-14 px-6 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center hover:border-secondary hover:bg-secondary/5 hover:shadow-md transition-all cursor-pointer group"
+                >
+                  <span className="font-display font-black text-lg text-slate-300 group-hover:text-primary transition-colors tracking-tighter whitespace-nowrap">
                     {brand.toUpperCase()}
                   </span>
                 </div>
@@ -311,23 +420,3 @@ export default function Home() {
     </div>
   );
 }
-
-// Add simple CSS for marquee
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-50%); }
-  }
-  .animate-\\[marquee_20s_linear_infinite\\] {
-    animation: marquee 30s linear infinite;
-  }
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-`;
-document.head.appendChild(style);
