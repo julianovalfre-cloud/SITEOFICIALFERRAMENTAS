@@ -1,22 +1,32 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Ferramentas Valfre E-commerce API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: products
+    description: Product catalog operations
+  - name: categories
+    description: Category operations
+  - name: cart
+    description: Shopping cart operations
+  - name: orders
+    description: Order operations
+  - name: checkout
+    description: Checkout and payment operations
+  - name: webhooks
+    description: Payment webhooks
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +34,361 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products with optional filters
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: number
+            default: 24
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [price_asc, price_desc, name_asc, newest, relevance]
+        - name: inStock
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductListResponse"
+
+  /products/featured:
+    get:
+      operationId: getFeaturedProducts
+      tags: [products]
+      summary: Get featured/highlighted products for home page
+      responses:
+        "200":
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bestSellers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+                  newArrivals:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+                  onSale:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+                required:
+                  - bestSellers
+                  - newArrivals
+                  - onSale
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get single product by id or slug
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /products/{id}/related:
+    get:
+      operationId: getRelatedProducts
+      tags: [products]
+      summary: Get related products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Related products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all categories with subcategories
+      responses:
+        "200":
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /cart:
+    get:
+      operationId: getCart
+      tags: [cart]
+      summary: Get current cart
+      parameters:
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /cart/items:
+    post:
+      operationId: addToCart
+      tags: [cart]
+      summary: Add item to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToCartRequest"
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /cart/items/{productId}:
+    put:
+      operationId: updateCartItem
+      tags: [cart]
+      summary: Update cart item quantity
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                quantity:
+                  type: number
+              required:
+                - sessionId
+                - quantity
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    delete:
+      operationId: removeCartItem
+      tags: [cart]
+      summary: Remove item from cart
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /checkout/shipping:
+    post:
+      operationId: calculateShipping
+      tags: [checkout]
+      summary: Calculate shipping cost by CEP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cep:
+                  type: string
+                sessionId:
+                  type: string
+              required:
+                - cep
+                - sessionId
+      responses:
+        "200":
+          description: Shipping options
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  options:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ShippingOption"
+                required:
+                  - options
+
+  /checkout/create:
+    post:
+      operationId: createCheckout
+      tags: [checkout]
+      summary: Create order and payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckoutRequest"
+      responses:
+        "200":
+          description: Created order with payment info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      tags: [orders]
+      summary: Get order status by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /webhooks/mercadopago:
+    post:
+      operationId: mercadoPagoWebhook
+      tags: [webhooks]
+      summary: MercadoPago payment webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                  required:
+                    - id
+              required:
+                - action
+                - data
+      responses:
+        "200":
+          description: Webhook received
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required:
+                  - ok
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +399,380 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        sku:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        price:
+          type: number
+        originalPrice:
+          type: number
+        discountPercent:
+          type: number
+        category:
+          type: string
+        categorySlug:
+          type: string
+        brand:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        stock:
+          type: number
+        inStock:
+          type: boolean
+        rating:
+          type: number
+        reviewCount:
+          type: number
+        isBestSeller:
+          type: boolean
+        isNew:
+          type: boolean
+        isOnSale:
+          type: boolean
+        weight:
+          type: number
+        unit:
+          type: string
+      required:
+        - id
+        - sku
+        - name
+        - slug
+        - price
+        - category
+        - categorySlug
+        - images
+        - stock
+        - inStock
+
+    ProductDetail:
+      allOf:
+        - $ref: "#/components/schemas/Product"
+        - type: object
+          properties:
+            description:
+              type: string
+            specifications:
+              type: array
+              items:
+                type: object
+                properties:
+                  label:
+                    type: string
+                  value:
+                    type: string
+                required:
+                  - label
+                  - value
+            longDescription:
+              type: string
+
+    ProductListResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        total:
+          type: number
+        page:
+          type: number
+        limit:
+          type: number
+        totalPages:
+          type: number
+      required:
+        - products
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        productCount:
+          type: number
+        subcategories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              slug:
+                type: string
+            required:
+              - id
+              - name
+              - slug
+      required:
+        - id
+        - name
+        - slug
+        - productCount
+
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+        sku:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: number
+        image:
+          type: string
+        stock:
+          type: number
+      required:
+        - productId
+        - sku
+        - name
+        - price
+        - quantity
+        - stock
+
+    Cart:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        subtotal:
+          type: number
+        total:
+          type: number
+        itemCount:
+          type: number
+      required:
+        - sessionId
+        - items
+        - subtotal
+        - total
+        - itemCount
+
+    AddToCartRequest:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        productId:
+          type: string
+        quantity:
+          type: number
+      required:
+        - sessionId
+        - productId
+        - quantity
+
+    ShippingOption:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        days:
+          type: number
+        carrier:
+          type: string
+      required:
+        - id
+        - name
+        - price
+        - days
+
+    CustomerAddress:
+      type: object
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        complement:
+          type: string
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        cep:
+          type: string
+      required:
+        - street
+        - number
+        - city
+        - state
+        - cep
+
+    CheckoutRequest:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            document:
+              type: string
+            address:
+              $ref: "#/components/schemas/CustomerAddress"
+          required:
+            - name
+            - email
+            - phone
+            - document
+            - address
+        payment:
+          type: object
+          properties:
+            method:
+              type: string
+              enum: [credit_card, pix, boleto]
+            installments:
+              type: number
+            cardToken:
+              type: string
+          required:
+            - method
+        shipping:
+          type: object
+          properties:
+            optionId:
+              type: string
+            price:
+              type: number
+            days:
+              type: number
+            carrier:
+              type: string
+          required:
+            - optionId
+            - price
+            - days
+      required:
+        - sessionId
+        - customer
+        - payment
+        - shipping
+
+    CheckoutResponse:
+      type: object
+      properties:
+        orderId:
+          type: string
+        status:
+          type: string
+        paymentMethod:
+          type: string
+        pixCode:
+          type: string
+        pixQrCode:
+          type: string
+        boletoUrl:
+          type: string
+        boletoBarcode:
+          type: string
+        total:
+          type: number
+      required:
+        - orderId
+        - status
+        - paymentMethod
+        - total
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [pending, paid, processing, shipped, delivered, cancelled]
+        paymentStatus:
+          type: string
+          enum: [pending, approved, rejected, refunded]
+        paymentMethod:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        subtotal:
+          type: number
+        shippingCost:
+          type: number
+        total:
+          type: number
+        createdAt:
+          type: string
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+          required:
+            - name
+            - email
+      required:
+        - id
+        - status
+        - paymentStatus
+        - paymentMethod
+        - items
+        - subtotal
+        - shippingCost
+        - total
+        - createdAt
+        - customer

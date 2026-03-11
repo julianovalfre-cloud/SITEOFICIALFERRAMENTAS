@@ -1,0 +1,18 @@
+packages:
+  "lucide-react": "Standard icons for e-commerce"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility function to efficiently merge Tailwind CSS classes"
+  "@hookform/resolvers": "Zod validation for react-hook-form"
+
+images:
+  - path: "artifacts/valfre-store/public/images/hero-tools.png"
+    description: "High quality professional photography of a modern hardware store interior, heavy duty tools, dark moody lighting with dramatic orange accents, depth of field"
+    aspect_ratio: "21:9"
+  - path: "artifacts/valfre-store/public/images/pattern-industrial.png"
+    description: "Subtle industrial metal diamond plate texture pattern, dark navy blue monochrome, very low opacity for background use"
+    aspect_ratio: "16:9"
+
+notes:
+  - Uses crypto.randomUUID() for anonymous cart session IDs stored in localStorage
+  - Integrates with pre-generated @workspace/api-client-react hooks
+  - Relies on ViaCEP public API for address auto-fill in checkout
