@@ -5,11 +5,54 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useListProducts, useGetFeaturedProducts, useListCategories } from "@workspace/api-client-react";
 import {
-  ArrowRight, Wrench, Zap, PaintRoller, ShieldCheck,
-  Truck, CreditCard, Hammer, Clock, Star, Flame, Trophy, Phone, Package
+  ArrowRight, ShieldCheck,
+  Truck, CreditCard, Clock, Star, Flame, Trophy, Phone, Package, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
+import { useState, useEffect, useCallback } from "react";
+
+const HERO_SLIDES = [
+  {
+    id: 1,
+    badge: "🔥 Ofertas Imperdíveis",
+    title: "POTÊNCIA\nMÁXIMA\nSUA OBRA",
+    titleHighlight: "SUA OBRA",
+    subtitle: "As melhores marcas de ferramentas elétricas e manuais. Preços imbatíveis com entrega para todo o Brasil.",
+    cta: "Ver Ofertas",
+    ctaLink: "/categoria/ferramentas-eletricas",
+    cta2: "Ver Categorias",
+    cta2Link: "/categoria/ferramentas-manuais",
+    img: "https://images.unsplash.com/photo-1587924025-bdc38eb22b95?w=800&q=80",
+    bg: "from-[#0b162c] via-[#1a2d4f] to-[#0d2040]",
+  },
+  {
+    id: 2,
+    badge: "🏷️ Feirão de Inverno",
+    title: "ATÉ 60%\nDE\nDESCONTO",
+    titleHighlight: "DESCONTO",
+    subtitle: "Ferramentas elétricas Bosch, Makita, DeWalt com os melhores preços da Grande Vitória. Aproveite enquanto dura!",
+    cta: "Aproveitar Agora",
+    ctaLink: "/categoria/ofertas",
+    cta2: "Ver Elétricas",
+    cta2Link: "/categoria/ferramentas-eletricas",
+    img: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80",
+    bg: "from-[#1a0b00] via-[#3d1a00] to-[#2a1200]",
+  },
+  {
+    id: 3,
+    badge: "🆕 Novidades 2026",
+    title: "LINHA\nPROFISSIONAL\nCOMPLETA",
+    titleHighlight: "COMPLETA",
+    subtitle: "Conheça nossa linha completa de ferramentas manuais e acessórios. Qualidade profissional para qualquer projeto.",
+    cta: "Ver Lançamentos",
+    ctaLink: "/categoria/ferramentas-manuais",
+    cta2: "Todos Produtos",
+    cta2Link: "/categoria/todas",
+    img: "https://images.unsplash.com/photo-1590739293931-a8f83d00bbf6?w=800&q=80",
+    bg: "from-[#0a1f0a] via-[#0d2b0d] to-[#061506]",
+  },
+];
 
 function ProductGridSkeleton() {
   return (
@@ -60,6 +103,15 @@ export default function Home() {
   const { data: listBest } = useListProducts({ limit: 5, sortBy: "price_desc" });
   const { data: listNew } = useListProducts({ limit: 5, sortBy: "newest" });
   const { data: categories, isLoading: isLoadingCats } = useListCategories();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const prevSlide = useCallback(() => setCurrentSlide(s => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length), []);
+  const nextSlide = useCallback(() => setCurrentSlide(s => (s + 1) % HERO_SLIDES.length), []);
+
+  useEffect(() => {
+    const t = setInterval(nextSlide, 6000);
+    return () => clearInterval(t);
+  }, [nextSlide]);
 
   const bestSellers = featured?.bestSellers?.length
     ? featured.bestSellers.slice(0, 5)
@@ -69,6 +121,8 @@ export default function Home() {
     : listNew?.products?.slice(0, 5) || [];
   const displayCats = (categories?.length ? categories : FALLBACK_CATS).slice(0, 8);
 
+  const slide = HERO_SLIDES[currentSlide];
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
 
@@ -77,15 +131,14 @@ export default function Home() {
         <div className="animate-marquee flex whitespace-nowrap gap-20 w-max text-sm font-bold">
           <span className="flex items-center gap-2"><Trophy className="w-4 h-4" /> 15.000+ Produtos em Estoque</span>
           <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Frete GRÁTIS acima de R$ 199,00</span>
-          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Parcele em até 12x sem juros</span>
-          <span className="flex items-center gap-2"><Zap className="w-4 h-4" /> Entrega expressa para SP Capital</span>
-          <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> Televendas: (11) 9999-9999</span>
-          {/* duplicate for seamless loop */}
+          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Parcelamos em 12x</span>
+          <span className="flex items-center gap-2"><Flame className="w-4 h-4" /> Entrega expressa: Cariacica, Viana, Vitória e Serra</span>
+          <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> Televendas: (27) 99999-9999</span>
           <span className="flex items-center gap-2"><Trophy className="w-4 h-4" /> 15.000+ Produtos em Estoque</span>
           <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Frete GRÁTIS acima de R$ 199,00</span>
-          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Parcele em até 12x sem juros</span>
-          <span className="flex items-center gap-2"><Zap className="w-4 h-4" /> Entrega expressa para SP Capital</span>
-          <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> Televendas: (11) 9999-9999</span>
+          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Parcelamos em 12x</span>
+          <span className="flex items-center gap-2"><Flame className="w-4 h-4" /> Entrega expressa: Cariacica, Viana, Vitória e Serra</span>
+          <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> Televendas: (27) 99999-9999</span>
         </div>
       </div>
 
@@ -93,92 +146,99 @@ export default function Home() {
 
       <main className="flex-1">
 
-        {/* ── HERO ── */}
-        <section className="relative bg-[#0b162c] overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0b162c] via-[#1a2d4f] to-[#0d2040]" />
-          <div className="absolute top-0 right-0 w-[900px] h-[900px] bg-secondary/10 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-900/30 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
-
-          <div className="relative z-10 max-w-7xl mx-auto px-6 py-14 md:py-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
-            {/* Left */}
-            <div className="flex-1 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/15 border border-secondary/25 text-secondary text-xs font-extrabold tracking-widest uppercase mb-5">
-                <Flame className="w-3.5 h-3.5 fill-current" /> Ofertas Imperdíveis
-              </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold leading-[1.05] text-white mb-5 tracking-tight">
-                POTÊNCIA<br />
-                MÁXIMA<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-orange-400 to-yellow-400">
-                  SUA OBRA
-                </span>
-              </h1>
-              <p className="text-base md:text-lg text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                As melhores marcas de ferramentas elétricas e manuais. Preços imbatíveis com entrega para todo o Brasil.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link href="/categoria/ferramentas-eletricas">
-                  <Button size="lg" className="bg-secondary hover:bg-orange-600 text-white font-extrabold px-8 h-13 text-base border-0 shadow-[0_6px_24px_rgba(232,101,26,0.4)] hover:-translate-y-0.5 transition-all rounded-xl w-full sm:w-auto">
-                    Ver Ofertas <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-                <Link href="/categoria/ferramentas-manuais">
-                  <Button size="lg" variant="outline" className="bg-white/5 text-white border-white/20 hover:bg-white/10 hover:text-white h-13 px-8 font-bold rounded-xl backdrop-blur-sm w-full sm:w-auto">
-                    Ver Categorias
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Stats */}
-              <div className="flex gap-8 mt-10 pt-8 border-t border-white/10 justify-center lg:justify-start">
-                <div className="text-center lg:text-left">
-                  <p className="text-2xl font-extrabold text-white">15k+</p>
-                  <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Produtos</p>
+        {/* ── HERO CAROUSEL (3 banners) ── */}
+        <section className="relative overflow-hidden" style={{ minHeight: 480 }}>
+          {/* Slides */}
+          <div className="relative w-full h-full">
+            {HERO_SLIDES.map((s, i) => (
+              <div
+                key={s.id}
+                className={`absolute inset-0 transition-opacity duration-700 ${i === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+              >
+                <div className={`w-full h-full bg-gradient-to-br ${s.bg}`}>
+                  <div className="absolute inset-0 opacity-30">
+                    <img src={s.img} alt="" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                  </div>
+                  <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-secondary/10 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
                 </div>
-                <div className="text-center lg:text-left">
-                  <p className="text-2xl font-extrabold text-white flex items-center gap-1 justify-center lg:justify-start">
-                    4.9 <Star className="w-4 h-4 text-amber-400 fill-current" />
-                  </p>
-                  <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Avaliações</p>
+              </div>
+            ))}
+
+            {/* Content (animated per slide) */}
+            <div className="relative z-20 max-w-7xl mx-auto px-6 py-14 md:py-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-14 min-h-[480px]">
+              <div className="flex-1 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/15 border border-secondary/25 text-secondary text-xs font-extrabold tracking-widest uppercase mb-5 transition-all duration-500">
+                  {slide.badge}
                 </div>
-                <div className="text-center lg:text-left">
-                  <p className="text-2xl font-extrabold text-white">Grátis</p>
-                  <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Frete &gt; R$199</p>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold leading-[1.05] text-white mb-5 tracking-tight transition-all duration-500">
+                  {slide.title.split('\n').map((line, i) => (
+                    <span key={i}>
+                      {line === slide.titleHighlight
+                        ? <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-orange-400 to-yellow-400">{line}</span>
+                        : line}
+                      {i < slide.title.split('\n').length - 1 && <br />}
+                    </span>
+                  ))}
+                </h1>
+                <p className="text-base md:text-lg text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                  {slide.subtitle}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <Link href={slide.ctaLink}>
+                    <Button size="lg" className="bg-secondary hover:bg-orange-600 text-white font-extrabold px-8 h-12 text-base border-0 shadow-[0_6px_24px_rgba(232,101,26,0.4)] transition-all rounded-xl w-full sm:w-auto">
+                      {slide.cta} <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
+                  <Link href={slide.cta2Link}>
+                    <Button size="lg" variant="outline" className="bg-white/5 text-white border-white/20 hover:bg-white/10 hover:text-white h-12 px-8 font-bold rounded-xl backdrop-blur-sm w-full sm:w-auto">
+                      {slide.cta2}
+                    </Button>
+                  </Link>
+                </div>
+                <div className="flex gap-8 mt-10 pt-8 border-t border-white/10 justify-center lg:justify-start">
+                  {[["15k+","Produtos"],["4.9 ★","Avaliações"],["Grátis","Frete >R$199"]].map(([v,l]) => (
+                    <div key={l} className="text-center lg:text-left">
+                      <p className="text-2xl font-extrabold text-white">{v}</p>
+                      <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">{l}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex-1 relative max-w-sm lg:max-w-none w-full hidden lg:block">
+                <div className="rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.6)] border border-white/10">
+                  <img src={slide.img} alt="Ferramentas" className="w-full object-cover aspect-[4/3]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                </div>
+                <div className="absolute -top-5 -right-4 bg-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"><Truck className="w-5 h-5 text-green-600" /></div>
+                  <div><p className="text-[10px] font-bold text-slate-400 uppercase">Entrega Express</p><p className="text-sm font-extrabold text-slate-800">Grande Vitória</p></div>
+                </div>
+                <div className="absolute -bottom-5 -left-4 bg-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3">
+                  <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center"><ShieldCheck className="w-5 h-5 text-secondary" /></div>
+                  <div><p className="text-[10px] font-bold text-slate-400 uppercase">Garantia</p><p className="text-sm font-extrabold text-slate-800">100% Segura</p></div>
                 </div>
               </div>
             </div>
 
-            {/* Right – hero image */}
-            <div className="flex-1 relative max-w-sm lg:max-w-none w-full">
-              <div className="rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.6)] border border-white/10 relative">
-                <img
-                  src="https://images.unsplash.com/photo-1587924025-bdc38eb22b95?w=800&q=80"
-                  alt="Ferramentas Profissionais"
-                  className="w-full h-auto object-cover aspect-[4/3]"
+            {/* Controls */}
+            <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 hover:bg-secondary text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-sm border border-white/20">
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 hover:bg-secondary text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-sm border border-white/20">
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
+            {/* Dots */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+              {HERO_SLIDES.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`rounded-full transition-all duration-300 ${i === currentSlide ? 'w-8 h-2.5 bg-secondary' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'}`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-              </div>
-
-              {/* Floating card – delivery */}
-              <div className="absolute -top-5 -right-4 bg-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 hidden md:flex">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <Truck className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Entrega</p>
-                  <p className="text-sm font-extrabold text-slate-800">Todo Brasil</p>
-                </div>
-              </div>
-
-              {/* Floating card – secure */}
-              <div className="absolute -bottom-5 -left-4 bg-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 hidden md:flex">
-                <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center">
-                  <ShieldCheck className="w-5 h-5 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Garantia</p>
-                  <p className="text-sm font-extrabold text-slate-800">100% Segura</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>

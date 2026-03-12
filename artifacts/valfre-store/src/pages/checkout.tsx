@@ -5,7 +5,7 @@ import { useCreateCheckout, useCalculateShipping } from "@workspace/api-client-r
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, CreditCard, Lock, CheckCircle2, ChevronRight, FileText, QrCode } from "lucide-react";
+import { ShieldCheck, CreditCard, Lock, CheckCircle2, ChevronRight, FileText, QrCode, Store, Wallet } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -21,6 +21,13 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+
+const PICKUP_OPTION = {
+  id: "pickup",
+  name: "Retirada Grátis na Loja (Cariacica — ES)",
+  price: 0,
+  days: 1,
+};
 
 // Minimal header for checkout (no distractions)
 function CheckoutHeader() {
@@ -56,7 +63,7 @@ const checkoutSchema = z.object({
 export default function CheckoutPage() {
   const { cart, sessionId } = useCart();
   const [, setLocation] = useLocation();
-  const [shippingOptions, setShippingOptions] = useState<any[]>([]);
+  const [shippingOptions, setShippingOptions] = useState<any[]>([PICKUP_OPTION]);
   
   const createMutation = useCreateCheckout();
   const shippingMutation = useCalculateShipping();

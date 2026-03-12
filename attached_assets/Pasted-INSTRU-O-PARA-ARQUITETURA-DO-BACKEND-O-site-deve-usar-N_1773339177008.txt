@@ -1,0 +1,213 @@
+INSTRUÇÃO PARA ARQUITETURA DO BACKEND
+
+O site deve usar Next.js com API Routes como backend interno.
+
+Não criar um servidor separado.
+
+O backend deve ficar dentro do próprio projeto Next.js.
+
+Arquitetura desejada:
+
+Frontend (Next.js React)
+↓
+API Routes (backend interno)
+↓
+Integrações externas
+↓
+Tiny ERP API
+Mercado Pago API
+
+Ou seja:
+
+Frontend → API interna → Tiny ERP
+
+Nunca chamar a API da Tiny diretamente no frontend.
+
+MOTIVO
+
+O token da Tiny não pode ficar exposto no navegador.
+
+A API da Tiny deve ser acessada apenas pelo backend.
+
+Isso garante:
+
+segurança
+
+controle de requisições
+
+cache
+
+tratamento de erro
+
+melhor performance
+
+ESTRUTURA DO PROJETO
+
+Criar as seguintes rotas de API dentro do projeto:
+
+/api/produtos
+/api/produto/[id]
+/api/clientes
+/api/pedido
+/api/webhook-mercadopago
+
+Essas rotas serão responsáveis por integrar com:
+
+Tiny ERP
+Mercado Pago
+
+FLUXO DE PRODUTOS
+
+O frontend não consulta a Tiny diretamente.
+
+Fluxo correto:
+
+Site → /api/produtos → Tiny API
+
+O endpoint /api/produtos deve chamar a API:
+
+produtos.pesquisa
+
+E retornar ao frontend:
+
+id
+
+nome
+
+sku
+
+descrição
+
+preço
+
+categoria
+
+imagens
+
+estoque
+
+FLUXO DE ESTOQUE
+
+Quando o site carregar um produto:
+
+Frontend → /api/produto/[id]
+API → Tiny ERP
+Tiny retorna estoque
+API envia para frontend
+
+FLUXO DE COMPRA
+
+Cliente adiciona produto ao carrinho
+↓
+Cliente finaliza checkout
+↓
+Pagamento processado pelo Mercado Pago
+↓
+Mercado Pago envia webhook
+↓
+/api/webhook-mercadopago recebe evento
+↓
+Backend valida pagamento
+↓
+Backend cria cliente no Tiny
+↓
+Backend cria pedido no Tiny
+↓
+Tiny baixa estoque
+
+INTEGRAÇÃO COM MERCADO PAGO
+
+Criar endpoint:
+
+/api/webhook-mercadopago
+
+Esse endpoint deve:
+
+receber webhook do Mercado Pago
+
+validar evento
+
+verificar status do pagamento
+
+criar pedido no Tiny
+
+Implementar proteção contra duplicidade de pedido (idempotência).
+
+TECNOLOGIAS A UTILIZAR
+
+Frontend:
+
+Next.js
+React
+TypeScript
+TailwindCSS
+
+Backend:
+
+Next.js API Routes
+
+Banco auxiliar (opcional):
+
+PostgreSQL
+
+Cache (opcional):
+
+Redis
+
+OBJETIVO FINAL
+
+O sistema deve funcionar assim:
+
+Cliente acessa o site
+↓
+Site carrega produtos via API interna
+↓
+API consulta Tiny ERP
+↓
+Cliente compra
+↓
+Pagamento Mercado Pago
+↓
+Webhook recebido
+↓
+Pedido criado no Tiny
+↓
+Estoque atualizado
+
+IMPORTANTE
+
+Tiny ERP deve ser a fonte de verdade para:
+
+produtos
+
+preços
+
+estoque
+
+clientes
+
+pedidos
+
+O site funciona como:
+
+vitrine
+
+carrinho
+
+checkout
+
+RESULTADO ESPERADO
+
+Criar backend integrado ao frontend usando Next.js API Routes para:
+
+puxar produtos do Tiny
+
+puxar estoque do Tiny
+
+enviar clientes ao Tiny
+
+enviar pedidos ao Tiny
+
+receber webhook do Mercado Pago
+
+O sistema deve ser organizado, seguro e preparado para produção.
