@@ -2,7 +2,21 @@
 
 ## Overview
 
-Complete e-commerce platform for Ferramentas Valfre, a professional tools and hardware store in Brazil. Features Tiny ERP integration, MercadoPago payments, and full product catalog management.
+Complete e-commerce platform for Ferramentas Valfre (CNPJ: 52.749.158/0001-62), a professional tools/hardware store in Cariacica-ES (Grande Vitória). Features Tiny ERP integration, MercadoPago transparent checkout, full product catalog, and a professional UI designed for high conversion.
+
+## Key Pages & Features
+
+- **Home**: 3-banner auto-rotating hero carousel (6s), trust block, category grid, best sellers, launches, WhatsApp CTA, brands strip
+- **Category**: Price range filter (min/max + quick ranges), brand checkboxes, availability filter, pagination, sort by
+- **Product Card**: PIX price (5% off), 12x installments, heart/favoriting, "Comprar Agora" + "Adicionar ao Carrinho", badges (OFF, Novo, Mais Vendido)
+- **Checkout**: Free pickup option (Cariacica), shipping from viaCEP, all payment methods
+- **Login/Cadastro** (`/login`): Personal vs business account type selector, form validation, show/hide password
+- **Minha Conta** (`/minha-conta`): Dashboard sidebar (Pedidos, Dados, Endereços, Favoritos, Cupons, Garantias, Avaliações, Privacidade, Sair)
+- **Ajuda** (`/ajuda`): FAQ Central with 8 categories, accordion, full-text search, contact block
+- **Policy pages**: Privacidade, Devolução, Garantia, Entrega, Termos
+- **WhatsApp button**: Floating globally, CTA section on home
+- **Header**: Mega-menu (9 categories + subcategories), search, user/cart/favorites icons, Ajuda link
+- **Footer**: Minha Conta links, Institucional, payment icons, CNPJ
 
 ## Stack
 

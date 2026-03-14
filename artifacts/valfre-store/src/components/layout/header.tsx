@@ -251,6 +251,7 @@ export function Header() {
                 <li><Link href="/categoria/ferramentas-manuais" className="hover:text-secondary py-2 block border-b-2 border-transparent hover:border-secondary transition-all">Manuais</Link></li>
                 <li><Link href="/categoria/construcao" className="hover:text-secondary py-2 block border-b-2 border-transparent hover:border-secondary transition-all">Construção</Link></li>
                 <li><Link href="/categoria/automotivo" className="hover:text-secondary py-2 block border-b-2 border-transparent hover:border-secondary transition-all">Automotivo</Link></li>
+                <li><Link href="/ajuda" className="hover:text-secondary py-2 block border-b-2 border-transparent hover:border-secondary transition-all">Ajuda</Link></li>
               </ul>
             </nav>
           </div>

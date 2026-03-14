@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useListProducts, useGetFeaturedProducts, useListCategories } from "@workspace/api-client-react";
 import {
   ArrowRight, ShieldCheck,
-  Truck, CreditCard, Clock, Star, Flame, Trophy, Phone, Package, ChevronLeft, ChevronRight
+  Truck, CreditCard, Clock, Star, Flame, Trophy, Phone, Package, ChevronLeft, ChevronRight, Zap, MessageCircle
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
@@ -450,6 +450,46 @@ export default function Home() {
                 <p className="text-white/80 text-sm">Ferramentas para mecânicos profissionais</p>
               </div>
             </Link>
+          </div>
+        </section>
+
+        {/* ── WHATSAPP CTA ── */}
+        <section className="py-12 bg-primary">
+          <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+            <div className="flex flex-col items-center md:items-start gap-3">
+              <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-white text-xs font-black tracking-wider uppercase">
+                <MessageCircle className="w-4 h-4" /> Atendimento Especializado
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+                Precisa de ajuda para<br />
+                <span className="text-secondary">escolher a ferramenta certa?</span>
+              </h2>
+              <p className="text-white/70 text-base max-w-lg">
+                Nossa equipe está pronta para tirar dúvidas, recomendar o produto ideal e ajudar com sua compra em tempo real.
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-4 shrink-0">
+              <a
+                href="https://wa.me/5527999999999?text=Olá!%20Preciso%20de%20ajuda%20para%20escolher%20uma%20ferramenta."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#1ebe57] text-white font-black text-lg px-8 py-4 rounded-2xl shadow-xl shadow-green-900/30 transition-all hover:-translate-y-1"
+              >
+                💬 Falar no WhatsApp
+              </a>
+              <div className="flex items-center gap-1.5 text-white/60 text-xs font-semibold">
+                <Zap className="w-3.5 h-3.5 text-secondary" />
+                Resposta em minutos · Seg a Sáb, 8h–18h
+              </div>
+              <div className="flex gap-5 text-center">
+                {[["🛡️","Compra Segura"],["📦","Entrega Rápida"],["⭐","+500 Clientes"]].map(([icon,label]) => (
+                  <div key={label} className="flex flex-col items-center gap-1">
+                    <span className="text-xl">{icon}</span>
+                    <span className="text-white/60 text-[10px] font-semibold">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 

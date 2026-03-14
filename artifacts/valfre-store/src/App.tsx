@@ -12,6 +12,9 @@ import Product from "@/pages/product";
 import CartPage from "@/pages/cart";
 import CheckoutPage from "@/pages/checkout";
 import OrderPage from "@/pages/order";
+import LoginPage from "@/pages/login";
+import MinhaContaPage from "@/pages/minha-conta";
+import AjudaPage from "@/pages/ajuda";
 import PoliticaPrivacidade from "@/pages/politica-privacidade";
 import PoliticaDevolucao from "@/pages/politica-devolucao";
 import Garantia from "@/pages/garantia";
@@ -30,6 +33,10 @@ function Router() {
       <Route path="/carrinho" component={CartPage} />
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/pedido/:id" component={OrderPage} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/cadastro" component={LoginPage} />
+      <Route path="/minha-conta" component={MinhaContaPage} />
+      <Route path="/ajuda" component={AjudaPage} />
       <Route path="/politica-privacidade" component={PoliticaPrivacidade} />
       <Route path="/politica-devolucao" component={PoliticaDevolucao} />
       <Route path="/garantia" component={Garantia} />

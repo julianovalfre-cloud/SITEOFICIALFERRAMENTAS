@@ -1,0 +1,789 @@
+Quero evoluir o site da Ferramentas Valfre para ficar com cara de e-commerce grande, profissional, confiável e forte em conversão, mantendo visual limpo e sem criar trabalho manual desnecessário.
+
+Além disso, quero que este projeto já seja pensado como a base de um futuro micro SaaS interno da empresa, sem precisar refazer tudo do zero depois.
+
+A empresa é:
+FERRAMENTAS VALFRE LTDA
+
+Objetivo geral:
+Criar um projeto que funcione muito bem hoje como e-commerce e site institucional, mas que já nasça com arquitetura preparada para crescer futuramente para um sistema interno inteligente, moderno, escalável e com integração com IA.
+
+==================================================
+REGRA PRINCIPAL
+==================================================
+
+Priorizar:
+- conversão
+- confiança
+- mobile
+- facilidade de compra
+- baixo trabalho operacional
+- estrutura escalável
+- visual profissional
+- arquitetura pronta para crescimento
+- simplicidade no MVP
+- reaproveitamento de estrutura
+
+Evitar:
+- recursos que exijam manutenção manual diária
+- layout poluído
+- cadastro burocrático
+- funções pesadas sem ganho real
+- arquitetura improvisada
+- retrabalho futuro
+- fluxos longos demais
+- aparência de protótipo genérico
+
+==================================================
+VISÃO ESTRATÉGICA DO PROJETO
+==================================================
+
+Quero que você pense como:
+- especialista em UX de e-commerce
+- arquiteto de produto digital
+- especialista em micro SaaS
+- especialista em automação para e-commerce
+- especialista em escalabilidade de sistemas
+
+O projeto deve ser dividido desde agora em camadas claras:
+
+1. Site público
+2. Área logada do cliente
+3. Área privada / app interno futuro
+4. Backend organizado
+5. Banco de dados estruturado
+6. Camada de integrações futuras
+7. Estrutura pronta para IA
+
+Quero que o projeto já seja desenhado para permitir expansão futura para um micro SaaS privado da empresa.
+
+==================================================
+1. HEADER E TOPO
+==================================================
+
+Fazer:
+- adicionar barra promocional no topo
+- reforçar o header com:
+  - logo
+  - busca principal grande
+  - minha conta
+  - meus pedidos
+  - carrinho
+  - favoritos
+  - atendimento / WhatsApp
+- melhorar o menu principal com mais cara de loja grande
+
+Barra promocional:
+Usar mensagens rotativas ou fixas como:
+- Frete para todo o Brasil
+- Desconto no Pix
+- Atendimento rápido no WhatsApp
+- Ofertas do dia
+
+==================================================
+2. HOME PAGE
+==================================================
+
+A home precisa ficar mais comercial e mais forte.
+
+Estrutura desejada:
+- barra promocional
+- header
+- banner principal
+- bloco de confiança
+- categorias em destaque
+- ofertas imperdíveis
+- mais vendidos
+- banner secundário
+- lançamentos / novidades
+- marcas em destaque
+- CTA para WhatsApp
+- rodapé completo
+
+Adicionar:
+- seção visual de categorias em destaque
+- seção mais vendidos
+- melhorar ofertas imperdíveis
+- adicionar marcas em destaque
+- adicionar banner secundário
+- adicionar bloco de confiança abaixo do banner
+
+Bloco de confiança:
+Criar ícones com textos como:
+- Compra Segura
+- Envio para todo o Brasil
+- Atendimento rápido
+- Pagamento via Pix e Cartão
+- Troca facilitada
+
+CTA WhatsApp:
+Criar um bloco forte de atendimento com:
+- Tire dúvidas sobre produtos
+- Fale com a Valfre no WhatsApp
+- Ajuda para escolher o produto ideal
+
+==================================================
+3. CARDS DE PRODUTO
+==================================================
+
+Melhorar todos os cards da loja.
+
+Exibir:
+- imagem
+- nome
+- preço principal
+- preço Pix
+- parcelamento
+- botão adicionar ao carrinho
+- botão comprar
+- selo promocional quando houver
+- botão favoritar
+
+Melhorar visual:
+- mais destaque para preço
+- mais contraste no CTA
+- hover melhor no desktop
+- melhor leitura no mobile
+
+==================================================
+4. PÁGINA DE CATEGORIA
+==================================================
+
+Melhorar:
+- breadcrumb
+- título da categoria
+- descrição curta da categoria
+- filtros
+- ordenação
+- grid de produtos mais forte
+
+Filtros:
+Manter simples e úteis:
+- preço
+- marca
+- disponibilidade
+- categoria/subcategoria
+
+==================================================
+5. PÁGINA DE PRODUTO (PDP)
+==================================================
+
+A PDP precisa ser uma das partes mais fortes do site.
+
+Bloco principal:
+Deve conter:
+- breadcrumb
+- título do produto
+- marca
+- SKU/código
+- galeria com miniaturas
+- imagem principal bem destacada
+- preço principal forte
+- preço Pix
+- parcelamento
+- seletor de quantidade
+- botão comprar agora
+- botão adicionar ao carrinho
+- favoritar
+- compartilhar
+- cálculo de frete por CEP
+
+Abaixo do bloco de compra:
+Adicionar mensagens de confiança:
+- compra segura
+- envio para todo o Brasil
+- atendimento via WhatsApp
+- nota fiscal
+- garantia
+
+Melhorar conteúdo da PDP:
+Separar em blocos:
+- descrição comercial
+- benefícios
+- aplicações
+- conteúdo da embalagem
+- ficha técnica
+- garantia
+
+Adicionar prova social:
+- estrelas
+- quantidade de avaliações
+- área de avaliações
+- área “para avaliar” e “avaliados” se houver conta do cliente
+
+Adicionar venda adicional:
+- compre junto
+- produtos relacionados
+- aproveite e leve também
+
+Adicionar ajuda de escolha:
+Criar bloco simples:
+- “Precisa de ajuda para escolher?”
+- botão para WhatsApp
+- ou assistente simples do produto
+
+Não criar IA complexa agora. Fazer algo simples e comercial.
+
+Selos:
+Permitir selos como:
+- Mais vendido
+- Novidade
+- Promoção
+- Frete grátis
+- Envio rápido
+
+==================================================
+6. CARRINHO
+==================================================
+
+Melhorar carrinho:
+- imagem do produto
+- nome
+- preço
+- preço Pix
+- quantidade
+- remover item
+- salvar em lista
+- resumo do pedido
+- subtotal
+- frete
+- total
+- botão continuar compra forte
+- cálculo de frete por CEP
+
+Cross-sell:
+Adicionar:
+- Aproveite e leve também
+- produtos relacionados com botão adicionar
+
+==================================================
+7. CHECKOUT
+==================================================
+
+Criar checkout limpo e forte:
+- simples
+- confiável
+- sem poluição
+- responsivo
+
+Deve conter:
+- resumo do pedido
+- dados do cliente
+- endereço
+- entrega
+- pagamento
+- Pix
+- cartão
+- cupom, se houver
+- mensagens de confiança
+
+==================================================
+8. LOGIN E CADASTRO
+==================================================
+
+Tela inicial:
+Criar escolha entre:
+- Conta pessoal
+- Conta empresa
+
+Cadastro pessoal:
+Campos:
+- nome
+- celular
+- e-mail
+- senha
+- confirmar senha
+
+Cadastro empresa:
+Campos:
+- CNPJ
+- razão social
+- endereço
+- telefone
+- e-mail para nota fiscal
+- tipo de contribuinte
+- inscrição estadual
+
+Melhorias:
+- máscara automática
+- mostrar/ocultar senha
+- validação em tempo real
+- checkbox de termos e política
+- visual centralizado e limpo
+
+Regra importante:
+Cadastro deve ser simples. Não criar fluxo longo demais.
+
+==================================================
+9. ÁREA LOGADA / MINHA CONTA
+==================================================
+
+Criar uma área do cliente profissional com menu lateral.
+
+Menu:
+- Minha Conta
+- Meus Pedidos
+- Dados Cadastrais
+- Endereços
+- Favoritos
+- Atendimento
+- Central de Ajuda
+- Minhas Empresas
+- Meus Tickets
+- Meus Cupons e Vales
+- Minhas Garantias
+- Minhas Avaliações
+- Minha Privacidade
+- Sair
+
+Melhorar UX:
+- estados vazios bonitos
+- CTA de retorno à compra
+- layout limpo
+- responsivo
+
+==================================================
+10. SEGURANÇA EM ÁREAS SENSÍVEIS
+==================================================
+
+Para áreas como:
+- dados cadastrais
+- alteração de senha
+- alteração de e-mail
+- alteração de telefone
+- dados de empresa
+
+Criar verificação extra:
+- enviar código por e-mail
+- ou por SMS/WhatsApp no futuro
+- mascarar e-mail e telefone
+- exibir tela de segurança limpa
+
+==================================================
+11. ATENDIMENTO
+==================================================
+
+Criar página de atendimento mais forte.
+
+Incluir:
+- WhatsApp em destaque
+- telefone
+- e-mail
+- horário de atendimento
+- vendas corporativas
+- bloco LGPD
+- CTA de contato
+
+==================================================
+12. CENTRAL DE AJUDA
+==================================================
+
+Criar central com categorias:
+- dúvidas frequentes
+- preço
+- produto
+- segurança
+- televendas
+- troca / devolução / cancelamento
+- críticas e sugestões
+
+Layout simples, limpo e fácil de navegar.
+
+==================================================
+13. FAVORITOS / LISTA DE DESEJOS
+==================================================
+
+Criar ou melhorar:
+- salvar produto
+- criar lista
+- remover item
+- mover item para o carrinho
+
+==================================================
+14. ÁREAS DE INTERESSE
+==================================================
+
+Criar área simples para o usuário marcar interesses:
+- ferramentas manuais
+- ferramentas elétricas
+- construção civil
+- jardinagem
+- elétrica
+- solda
+- compressores
+- auto center
+
+Sem exigir gestão manual constante.
+
+==================================================
+15. CUPONS, GARANTIAS, AVALIAÇÕES E PRIVACIDADE
+==================================================
+
+Criar páginas/áreas para:
+- Meus Cupons e Vales
+- Minhas Garantias
+- Minhas Avaliações
+- Minha Privacidade
+
+Privacidade:
+Incluir:
+- política de privacidade
+- preferências de marketing
+- e-mail
+- SMS
+- exclusão de dados
+
+==================================================
+16. RODAPÉ
+==================================================
+
+Completar rodapé com:
+- institucional
+- categorias
+- atendimento
+- política de privacidade
+- trocas e devoluções
+- termos de uso
+- contato
+- CNPJ
+- razão social
+- e-mail
+- links úteis
+- WhatsApp
+
+Remover informações desnecessárias e deixar com mais cara de operação grande.
+
+==================================================
+17. VISUAL GERAL
+==================================================
+
+Quero o site com aparência:
+- industrial
+- moderna
+- profissional
+- limpa
+- forte comercialmente
+- mais premium
+- com cara de loja grande
+
+Ajustes gerais:
+- melhorar espaçamentos
+- melhorar hierarquia visual
+- melhorar botões
+- melhorar contraste
+- melhorar aparência no mobile
+- evitar cara de protótipo/app genérico
+
+==================================================
+18. SEO E PERFORMANCE
+==================================================
+
+Corrigir:
+- home com conteúdo real e indexável
+- headings organizados
+- páginas de categoria com estrutura melhor
+- PDP com título e conteúdo real
+- melhorar renderização inicial
+- melhorar performance no mobile
+
+==================================================
+19. FUTURO MICRO SAAS INTERNO
+==================================================
+
+Agora, além do e-commerce, quero que você prepare este projeto para crescer futuramente como um micro SaaS interno da empresa.
+
+Esse micro SaaS deverá permitir futuramente:
+1. Painel administrativo privado com login seguro
+2. Dashboard com métricas da operação
+3. Integração com IA da OpenAI para tarefas internas
+4. Gestão e consulta de produtos
+5. Consulta de estoque
+6. Consulta e acompanhamento de pedidos
+7. Geração automática de descrições de produtos
+8. Geração de títulos e textos comerciais
+9. Apoio ao cadastro de produtos
+10. Busca inteligente dentro de dados do negócio
+11. Área para upload de planilhas, PDFs e arquivos
+12. Leitura e organização de informações internas da empresa
+13. Possibilidade futura de integração com Tiny ERP, Mercado Pago, WhatsApp, planilhas e APIs externas
+14. Estrutura para automações futuras sem precisar reconstruir o projeto
+
+==================================================
+20. ARQUITETURA ESPERADA
+==================================================
+
+Quero que você reorganize a solução separando claramente:
+
+a) Site público
+b) Área do cliente
+c) Área privada /app futura
+d) Backend
+e) Banco de dados
+f) Camada de integrações
+g) Camada de IA futura
+
+Quero uma base:
+- limpa
+- inteligente
+- organizada
+- reaproveitável
+- escalável
+- fácil de evoluir
+
+Sem exagerar na complexidade do MVP.
+
+==================================================
+21. ESTRUTURA DE PÁGINAS
+==================================================
+
+Defina de forma organizada:
+
+Páginas do site público:
+- Home
+- Categoria
+- Produto
+- Carrinho
+- Checkout
+- Login
+- Cadastro
+- Atendimento
+- Central de Ajuda
+- Institucional
+- Políticas
+- Termos
+- Privacidade
+
+Páginas da área do cliente:
+- Minha Conta
+- Pedidos
+- Dados Cadastrais
+- Endereços
+- Favoritos
+- Tickets
+- Cupons
+- Garantias
+- Avaliações
+- Privacidade
+
+Páginas previstas para a futura área privada /app:
+- Dashboard
+- Produtos
+- Estoque
+- Pedidos
+- Clientes
+- Arquivos
+- Conteúdo IA
+- Configurações
+- Integrações
+- Logs
+- Automações futuras
+
+==================================================
+22. ESTRUTURA DE COMPONENTES E MÓDULOS
+==================================================
+
+Organize o projeto em componentes e módulos reutilizáveis para evitar retrabalho futuro.
+
+Exemplos:
+- header
+- barra promocional
+- busca
+- card de produto
+- grid de produto
+- vitrine
+- filtros
+- breadcrumb
+- bloco de confiança
+- bloco WhatsApp
+- avaliações
+- formulários
+- autenticação
+- sidebar da conta
+- tabela/lista reutilizável
+- upload de arquivos
+- módulos de IA
+- serviços de integração
+
+==================================================
+23. ESTRUTURA DE BANCO DE DADOS INICIAL
+==================================================
+
+Sugira uma modelagem inicial simples pensando em:
+- usuários
+- perfis
+- empresas
+- endereços
+- produtos
+- categorias
+- pedidos
+- itens do pedido
+- favoritos
+- avaliações
+- cupons
+- garantias
+- tickets
+- arquivos
+- logs
+- configurações
+- integrações futuras
+
+Quero uma estrutura inicial simples, mas pronta para crescer.
+
+==================================================
+24. ESTRUTURA PARA IA FUTURA
+==================================================
+
+Explique como o sistema deve ser preparado para integrar com a OpenAI no futuro.
+
+Casos de uso reais:
+- gerar descrição de produto
+- gerar título comercial
+- responder dúvidas internas
+- resumir arquivos
+- consultar dados do negócio
+- sugerir melhorias de cadastro
+- ajudar atendimento interno
+- apoiar automações operacionais
+
+Importante:
+Não criar IA pesada agora.
+Apenas deixar a arquitetura pronta para isso.
+
+==================================================
+25. INTEGRAÇÕES FUTURAS
+==================================================
+
+Preparar base para futuras integrações com:
+- Tiny ERP
+- Mercado Pago
+- WhatsApp
+- planilhas
+- APIs externas
+- automações internas
+
+Essas integrações devem entrar depois, sem exigir reconstrução do projeto.
+
+==================================================
+26. ROADMAP EM FASES
+==================================================
+
+Monte a entrega em fases claras:
+
+Fase 1:
+- estrutura do site público
+- visual profissional
+- home forte
+- categoria
+- PDP
+- carrinho
+- checkout
+- login/cadastro
+- minha conta
+- páginas institucionais
+- atendimento
+- central de ajuda
+- rodapé completo
+
+Fase 2:
+- melhorar área logada
+- favoritos
+- pedidos
+- dados cadastrais
+- segurança em áreas sensíveis
+- conta empresa
+- tickets
+- cupons/garantias/avaliações/privacidade
+
+Fase 3:
+- preparar /app
+- dashboard inicial
+- estrutura interna
+- banco mais sólido
+- organização de módulos
+- logs e configurações
+
+Fase 4:
+- preparar camada de IA
+- geração de conteúdo
+- upload de arquivos
+- leitura interna
+- busca inteligente
+
+Fase 5:
+- integrações
+- Tiny
+- Mercado Pago
+- WhatsApp
+- APIs
+- automações
+
+==================================================
+27. PRIORIDADE DE EXECUÇÃO
+==================================================
+
+Fazer primeiro:
+- header + barra promocional
+- home mais comercial
+- cards de produto
+- PDP mais forte
+- carrinho
+- checkout
+- login/cadastro
+- minha conta
+- atendimento e central de ajuda
+- rodapé e páginas institucionais
+
+Fazer depois:
+- cupons
+- garantias
+- avaliações
+- privacidade
+- áreas de interesse
+- melhorias extras de conta empresa
+- estrutura /app interna
+- IA
+- integrações
+
+==================================================
+28. RESULTADO FINAL ESPERADO
+==================================================
+
+O site deve ficar com:
+- cara de e-commerce grande
+- mais confiança
+- mais conversão
+- compra mais fácil
+- melhor experiência no mobile
+- melhor área logada
+- melhor pós-venda
+- baixo trabalho operacional
+- base pronta para crescer
+
+E ao mesmo tempo deve nascer com arquitetura preparada para:
+- virar um micro SaaS interno
+- integrar IA da OpenAI
+- integrar Tiny ERP
+- integrar Mercado Pago
+- integrar WhatsApp
+- crescer sem retrabalho
+
+==================================================
+29. O QUE QUERO QUE VOCÊ ME ENTREGUE
+==================================================
+
+Quero que você me entregue de forma organizada e prática:
+
+1. Arquitetura ideal do projeto
+2. Estrutura de páginas
+3. Estrutura de componentes e módulos
+4. Estrutura inicial de banco de dados
+5. Organização do frontend, backend e área /app
+6. Direção visual e UX
+7. Roadmap por fases
+8. Ordem ideal de implementação
+9. Sugestões para manter baixo trabalho operacional
+10. Como deixar a base pronta para IA e micro SaaS sem complicar o MVP
+
+Quero uma resposta técnica, estratégica e prática.
+Não quero apenas ideias soltas.
+Quero uma proposta de estrutura real de produto.

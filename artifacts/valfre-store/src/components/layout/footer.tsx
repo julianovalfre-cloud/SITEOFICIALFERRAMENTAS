@@ -80,11 +80,18 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Institucional */}
+          {/* Links úteis */}
           <div>
+            <h3 className="text-base font-bold mb-5 uppercase tracking-wider text-white">Minha Conta</h3>
+            <ul className="space-y-2.5 text-sm text-primary-foreground/80 mb-7">
+              <li><Link href="/login" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Entrar / Cadastrar</Link></li>
+              <li><Link href="/minha-conta" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Meus Pedidos</Link></li>
+              <li><Link href="/minha-conta" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Favoritos</Link></li>
+              <li><Link href="/ajuda" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Central de Ajuda / FAQ</Link></li>
+              <li><a href="https://melhorrastreio.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Rastrear Pedido</a></li>
+            </ul>
             <h3 className="text-base font-bold mb-5 uppercase tracking-wider text-white">Institucional</h3>
             <ul className="space-y-2.5 text-sm text-primary-foreground/80">
-              <li><Link href="/sobre" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Quem Somos</Link></li>
               <li><Link href="/politica-privacidade" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Política de Privacidade</Link></li>
               <li><Link href="/politica-devolucao" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Trocas e Devoluções</Link></li>
               <li><Link href="/garantia" className="hover:text-secondary hover:translate-x-1 inline-block transition-all">Garantia de Produtos</Link></li>
