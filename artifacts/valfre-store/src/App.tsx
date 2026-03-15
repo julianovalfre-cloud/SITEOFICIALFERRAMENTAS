@@ -21,6 +21,7 @@ import Garantia from "@/pages/garantia";
 import PoliticaEntrega from "@/pages/politica-entrega";
 import Termos from "@/pages/termos";
 import RastreioPage from "@/pages/rastreio";
+import IntegracaoApiPage from "@/pages/admin/integracao-api";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/pedido/:id" component={OrderPage} />
       <Route path="/rastreio/:id" component={RastreioPage} />
       <Route path="/rastreio" component={RastreioPage} />
+      <Route path="/admin/integracao-api" component={IntegracaoApiPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/cadastro" component={LoginPage} />
       <Route path="/minha-conta" component={MinhaContaPage} />

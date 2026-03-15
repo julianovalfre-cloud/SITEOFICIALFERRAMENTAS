@@ -1,0 +1,224 @@
+Create a complete API integration auth system for the ecommerce website so the ERP can connect by copy-and-paste only.
+
+Goal:
+The website must generate and store its own API token, expose a working health/test endpoint, and provide a visual admin page showing:
+- Base API URL
+- API token
+- Copy buttons
+- Regenerate token button
+- Test endpoint status
+
+Important:
+Do not remove existing routes.
+Only add the new integration auth layer and UI.
+
+========================================
+1) BACKEND REQUIREMENTS
+========================================
+
+Implement these endpoints in the site API:
+
+GET /api/health
+Response 200:
+{ "status": "ok", "service": "valfre ecommerce api" }
+
+GET /api/test
+Response 200:
+{ "status": "connected", "service": "valfre ecommerce api" }
+
+GET /api/ping
+Response 200:
+{ "status": "connected", "service": "valfre ecommerce api" }
+
+Also implement protected integration endpoints using Bearer token auth.
+
+Create these new endpoints:
+
+GET /api/integration/config
+Returns:
+{
+  "baseUrl": "https://YOUR-SITE-DOMAIN/api",
+  "tokenPreview": "vlf_site_xxxxx",
+  "tokenExists": true
+}
+
+POST /api/integration/generate-token
+Generates a secure token if none exists yet.
+Response:
+{
+  "success": true,
+  "token": "FULL_TOKEN_HERE",
+  "baseUrl": "https://YOUR-SITE-DOMAIN/api"
+}
+
+POST /api/integration/regenerate-token
+Invalidates old token and creates a new one.
+Response:
+{
+  "success": true,
+  "token": "NEW_FULL_TOKEN_HERE",
+  "baseUrl": "https://YOUR-SITE-DOMAIN/api"
+}
+
+POST /api/integration/validate
+Headers:
+Authorization: Bearer <token>
+Response 200:
+{
+  "success": true,
+  "authorized": true,
+  "service": "valfre ecommerce api"
+}
+
+GET /api/integration/site-info
+Headers:
+Authorization: Bearer <token>
+Response:
+{
+  "success": true,
+  "siteName": "Ferramentas Valfre - Loja Online",
+  "apiVersion": "1.0.0",
+  "features": {
+    "orders": true,
+    "products": true,
+    "stock": true,
+    "coupons": true,
+    "shipping": true,
+    "abandonedCart": true
+  }
+}
+
+Auth rules:
+- Token must be stored securely in database or environment-backed persistent storage
+- Token must NOT be hardcoded
+- Use Bearer token authentication
+- Return 401 for invalid token
+- Add helper middleware requireSiteIntegrationAuth()
+
+========================================
+2) TOKEN FORMAT
+========================================
+
+Generate secure token in this style:
+vlf_site_<random_long_secure_string>
+
+Example:
+vlf_site_9a7f3c4e8d91ab34f2c6e8d5f712c901
+
+Use crypto-secure random generation.
+
+========================================
+3) DATABASE / STORAGE
+========================================
+
+Create persistent storage for site integration settings:
+table or collection: site_api_integrations
+
+Fields:
+- id
+- token_hash or encrypted_token
+- token_preview
+- created_at
+- updated_at
+- last_used_at
+- active
+
+If possible, store token hashed and only show the full token at generation time.
+If hashed-only storage is used, also provide a one-time generated token modal so user can copy it immediately.
+
+========================================
+4) VISUAL ADMIN PAGE
+========================================
+
+Create a visual page in the site admin:
+Route: /admin/integracao-api
+or if admin routes already exist, place it in the current admin area.
+
+This page must contain:
+
+Card 1 — Status da API
+- Badge: Ativa / Inativa
+- Health endpoint result
+- Test endpoint result
+- Ping endpoint result
+
+Card 2 — URL da API
+- Show exact value:
+  https://YOUR-SITE-DOMAIN/api
+- Copy button
+
+Card 3 — Token de Integração
+- If token exists:
+  show masked token preview
+  button: “Copiar token atual” only if full token is available
+  button: “Regenerar token”
+- If token does not exist:
+  button: “Gerar token”
+- When generating or regenerating:
+  show modal with full token
+  show copy button
+  show warning:
+  “Copie este token agora. Ele poderá ficar oculto depois.”
+
+Card 4 — Teste rápido
+- Button: “Testar /api/health”
+- Button: “Testar /api/test”
+- Button: “Testar /api/ping”
+- Button: “Testar autenticação”
+- Show response JSON visually
+
+Card 5 — Instruções para ERP
+Show copy-ready values:
+- URL da API do Site
+- Token de API
+- Example:
+  URL = https://YOUR-SITE-DOMAIN/api
+  Token = vlf_site_xxxxxxxxx
+
+========================================
+5) ERP CONNECTION COMPATIBILITY
+========================================
+
+Make sure the site works with ERP expectations.
+
+The ERP connection screen should be able to use:
+- URL da API do Site = https://YOUR-SITE-DOMAIN/api
+- Token de API = generated token
+
+The ERP test should succeed against:
+GET {baseUrl}/health
+and/or
+POST {baseUrl}/integration/validate with Bearer token
+
+So ensure both public and protected checks work.
+
+========================================
+6) IMPORTANT FIXES
+========================================
+
+Make sure deployed production routes actually work.
+If app is mounted under /api already, do NOT duplicate /api twice.
+Verify production deployment path carefully.
+
+After implementation:
+- restart server
+- confirm these URLs work in production:
+  https://YOUR-SITE-DOMAIN/api/health
+  https://YOUR-SITE-DOMAIN/api/test
+  https://YOUR-SITE-DOMAIN/api/ping
+
+Also confirm protected route works with generated token.
+
+========================================
+7) FINAL DELIVERABLE
+========================================
+
+At the end, show me clearly:
+
+1. The exact production API base URL
+2. The exact generated token
+3. The exact admin page route where I can copy them later
+4. Which endpoint the ERP should use to validate connection
+5. Confirmation that the site is ready for ERP copy-and-paste integration
+
+Do everything end-to-end, including backend, storage, auth middleware, UI, production route registration, and final testing.
