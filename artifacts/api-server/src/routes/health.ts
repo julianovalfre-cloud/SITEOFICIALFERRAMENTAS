@@ -12,4 +12,12 @@ router.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok", service: "valfre ecommerce api" });
 });
 
+router.get("/test", (_req, res) => {
+  res.status(200).json({ status: "connected", service: "valfre ecommerce api" });
+});
+
+router.get("/ping", (_req, res) => {
+  res.status(200).json({ status: "connected", service: "valfre ecommerce api" });
+});
+
 export default router;
