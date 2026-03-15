@@ -146,11 +146,8 @@ router.post("/products", async (req, res) => {
         },
       });
 
-    const host = process.env.REPLIT_DOMAINS
-      ? `https://${process.env.REPLIT_DOMAINS.split(",")[0].trim()}`
-      : `${req.protocol}://${req.get("host")}`;
-
-    const productUrl = `${host}/produto/${productPayload.slug}`;
+    const SITE_BASE_URL = "https://valfre-ecom-suite--cadastrovalfre.replit.app";
+    const productUrl = `${SITE_BASE_URL}/produto/${productPayload.slug}`;
 
     console.log(`[POST /products] Upserted SKU=${sku} → ${productUrl}`);
 
