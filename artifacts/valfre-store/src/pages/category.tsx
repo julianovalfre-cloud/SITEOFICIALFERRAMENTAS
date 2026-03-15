@@ -335,12 +335,21 @@ export default function Category() {
               <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-5 border border-slate-200">
                 <Filter className="w-8 h-8 text-slate-300" />
               </div>
-              <h3 className="text-xl font-bold text-slate-700 mb-2">Nenhum produto encontrado</h3>
-              <p className="text-slate-400 text-sm mb-6">Tente alterar os filtros ou buscar outro termo.</p>
-              {hasActiveFilters && (
-                <Button variant="outline" onClick={clearFilters} className="border-secondary text-secondary font-bold">
-                  Limpar Filtros
-                </Button>
+              {hasActiveFilters || searchParam ? (
+                <>
+                  <h3 className="text-xl font-bold text-slate-700 mb-2">Nenhum produto encontrado</h3>
+                  <p className="text-slate-400 text-sm mb-6">Tente alterar os filtros ou buscar outro termo.</p>
+                  {hasActiveFilters && (
+                    <Button variant="outline" onClick={clearFilters} className="border-secondary text-secondary font-bold">
+                      Limpar Filtros
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <h3 className="text-xl font-bold text-slate-700 mb-2">Sem produtos publicados ainda.</h3>
+                  <p className="text-slate-400 text-sm">Os produtos aparecerão aqui assim que forem publicados pelo ERP.</p>
+                </>
               )}
             </div>
           )}

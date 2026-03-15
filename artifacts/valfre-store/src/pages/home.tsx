@@ -343,7 +343,7 @@ export default function Home() {
                 )
                 : (
                   <div className="bg-muted rounded-xl p-12 text-center text-muted-foreground border border-dashed">
-                    Nenhum produto em destaque no momento.
+                    Sem produtos publicados ainda.
                   </div>
                 )
             }
@@ -422,7 +422,7 @@ export default function Home() {
                 )
                 : (
                   <div className="bg-slate-50 rounded-xl p-12 text-center text-muted-foreground border border-dashed">
-                    Nenhum lançamento no momento.
+                    Sem produtos publicados ainda.
                   </div>
                 )
             }
