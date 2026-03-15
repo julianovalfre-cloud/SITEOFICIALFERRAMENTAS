@@ -85,28 +85,30 @@ router.post("/products", async (req, res) => {
       sku,
       name,
       slug,
-      description,
-      price,
-      stock,
-      images,
-      status,
+      description = "",
+      price = 0,
+      stock = 0,
+      images = [],
+      status = "active",
       category,
       categorySlug,
       brand,
       tinyId,
-    } = req.body ?? {};
+    } = req.body || {};
+
+    console.log("[POST /api/products]", { sku, name, slug });
 
     if (!sku || !name || !slug) {
       return res.status(400).json({
         success: false,
-        error: "missing_fields",
-        message: "Campos obrigatórios: sku, name, slug",
+        error: "Missing required fields: sku, name or slug",
       });
     }
 
-    const inStock = status === "active" ? (Number(stock ?? 0) > 0) : false;
-    const priceStr = String(parseFloat(String(price ?? 0)).toFixed(2));
-    const stockNum = Math.max(0, parseInt(String(stock ?? 0)));
+    const safeImages = Array.isArray(images) ? images : [];
+    const inStock = status === "active" ? (Number(stock) > 0) : false;
+    const priceStr = String(parseFloat(String(price)).toFixed(2));
+    const stockNum = Math.max(0, parseInt(String(stock)));
 
     const productPayload = {
       id: randomUUID(),
@@ -117,7 +119,7 @@ router.post("/products", async (req, res) => {
       price: priceStr,
       stock: stockNum,
       inStock,
-      images: Array.isArray(images) ? images : [],
+      images: safeImages,
       category: category ? String(category) : "Geral",
       categorySlug: categorySlug ? String(categorySlug) : "geral",
       brand: brand ? String(brand) : null,
@@ -147,17 +149,16 @@ router.post("/products", async (req, res) => {
       });
 
     const SITE_BASE_URL = "https://valfre-ecom-suite--cadastrovalfre.replit.app";
-    const productUrl = `${SITE_BASE_URL}/produto/${productPayload.slug}`;
+    const productUrl = `${SITE_BASE_URL}/produto/${slug}`;
 
-    console.log(`[POST /products] Upserted SKU=${sku} → ${productUrl}`);
+    console.log(`[POST /api/products] Upserted SKU=${sku} → ${productUrl}`);
 
     return res.status(200).json({ success: true, productUrl });
-  } catch (err: any) {
-    console.error("[POST /products] Error:", err?.message ?? err);
+  } catch (error: any) {
+    console.error("[POST /api/products] ERROR:", error);
     return res.status(500).json({
       success: false,
-      error: "internal_error",
-      message: "Erro ao publicar produto",
+      error: error.message,
     });
   }
 });
