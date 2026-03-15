@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db, productsTable, categoriesTable } from "@workspace/db";
 import { eq, like, and, gte, lte, desc, asc, or, ilike, sql } from "drizzle-orm";
+import { randomUUID } from "crypto";
 
 const router: IRouter = Router();
 
@@ -73,6 +74,94 @@ router.get("/products", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "internal_error", message: "Erro ao buscar produtos" });
+  }
+});
+
+router.post("/products", async (req, res) => {
+  try {
+    console.log("[POST /products] Incoming request body:", JSON.stringify(req.body, null, 2));
+
+    const {
+      sku,
+      name,
+      slug,
+      description,
+      price,
+      stock,
+      images,
+      status,
+      category,
+      categorySlug,
+      brand,
+      tinyId,
+    } = req.body ?? {};
+
+    if (!sku || !name || !slug) {
+      return res.status(400).json({
+        success: false,
+        error: "missing_fields",
+        message: "Campos obrigatórios: sku, name, slug",
+      });
+    }
+
+    const inStock = status === "active" ? (Number(stock ?? 0) > 0) : false;
+    const priceStr = String(parseFloat(String(price ?? 0)).toFixed(2));
+    const stockNum = Math.max(0, parseInt(String(stock ?? 0)));
+
+    const productPayload = {
+      id: randomUUID(),
+      sku: String(sku),
+      name: String(name),
+      slug: String(slug),
+      description: description ? String(description) : null,
+      price: priceStr,
+      stock: stockNum,
+      inStock,
+      images: Array.isArray(images) ? images : [],
+      category: category ? String(category) : "Geral",
+      categorySlug: categorySlug ? String(categorySlug) : "geral",
+      brand: brand ? String(brand) : null,
+      tinyId: tinyId ? String(tinyId) : null,
+      updatedAt: new Date(),
+    };
+
+    await db
+      .insert(productsTable)
+      .values(productPayload)
+      .onConflictDoUpdate({
+        target: productsTable.sku,
+        set: {
+          name: productPayload.name,
+          slug: productPayload.slug,
+          description: productPayload.description,
+          price: productPayload.price,
+          stock: productPayload.stock,
+          inStock: productPayload.inStock,
+          images: productPayload.images,
+          category: productPayload.category,
+          categorySlug: productPayload.categorySlug,
+          brand: productPayload.brand,
+          tinyId: productPayload.tinyId,
+          updatedAt: productPayload.updatedAt,
+        },
+      });
+
+    const host = process.env.REPLIT_DOMAINS
+      ? `https://${process.env.REPLIT_DOMAINS.split(",")[0].trim()}`
+      : `${req.protocol}://${req.get("host")}`;
+
+    const productUrl = `${host}/produto/${productPayload.slug}`;
+
+    console.log(`[POST /products] Upserted SKU=${sku} → ${productUrl}`);
+
+    return res.status(200).json({ success: true, productUrl });
+  } catch (err: any) {
+    console.error("[POST /products] Error:", err?.message ?? err);
+    return res.status(500).json({
+      success: false,
+      error: "internal_error",
+      message: "Erro ao publicar produto",
+    });
   }
 });
 
