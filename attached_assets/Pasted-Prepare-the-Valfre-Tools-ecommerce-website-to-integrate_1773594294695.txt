@@ -1,0 +1,365 @@
+Prepare the Valfre Tools ecommerce website to integrate with a future ERP backend.
+
+IMPORTANT RULES
+
+The website must NOT integrate directly with:
+- Tiny ERP
+- Melhor Envio
+- SEFAZ
+- internal fiscal logic
+
+All integrations must go through a future ERP API.
+
+Architecture that must be respected:
+
+Website
+↓
+ERP API
+↓
+Tiny ERP
+Mercado Pago
+Melhor Envio
+SEFAZ
+
+The website will only consume ERP endpoints.
+
+Do not create debug loops.
+Do not modify the current Mercado Pago checkout integration.
+Do not break the current UI.
+
+This task only prepares the website for ERP integration.
+
+--------------------------------------------------
+
+PART 1 — CREATE ERP API CLIENT
+
+Create a centralized API client module for ERP communication.
+
+Example file:
+
+services/erpApi.ts
+
+This client must read environment variable:
+
+ERP_API_URL
+
+Example functions:
+
+getProducts()
+getProductBySlug(slug)
+getStock(sku)
+calculateShipping(payload)
+createOrder(orderPayload)
+validateCoupon(code)
+getOrder(orderId)
+getTracking(orderId)
+
+Use fetch with JSON responses.
+
+--------------------------------------------------
+
+PART 2 — PRODUCT DATA SOURCE
+
+Modify product pages so product data can come from ERP.
+
+Expected ERP response structure:
+
+{
+ id,
+ slug,
+ sku,
+ name,
+ brand,
+ description,
+ price,
+ promo_price,
+ stock,
+ weight,
+ width,
+ height,
+ length,
+ images,
+ category
+}
+
+Product pages must display:
+
+name
+price
+promo_price
+stock
+images
+description
+
+The SKU must always be stored for checkout.
+
+--------------------------------------------------
+
+PART 3 — STOCK CHECK FROM ERP
+
+Before adding to cart, verify stock through ERP endpoint.
+
+ERP endpoint that will exist later:
+
+GET /api/store/stock/:sku
+
+Example response:
+
+{
+ "sku":"MAR-001",
+ "stock":12,
+ "available":true
+}
+
+If stock is unavailable, disable Add to Cart button.
+
+--------------------------------------------------
+
+PART 4 — SHIPPING CALCULATION VIA ERP
+
+Implement shipping calculation UI but call ERP endpoint.
+
+Create function:
+
+calculateShipping(cep, cartItems)
+
+Call:
+
+POST /api/store/shipping/calculate
+
+Payload example:
+
+{
+ "cepDestino":"29140000",
+ "products":[
+  {
+   "sku":"MAR-001",
+   "name":"Martelo Tramontina",
+   "width":20,
+   "height":10,
+   "length":25,
+   "weight":0.5,
+   "insurance_value":47.90,
+   "quantity":1
+  }
+ ]
+}
+
+Display returned options:
+
+Carrier
+Price
+Delivery time
+
+Include:
+
+Correios
+Jadlog
+Azul Cargo
+Local Pickup
+
+Selected shipping must update order summary.
+
+--------------------------------------------------
+
+PART 5 — CART STRUCTURE
+
+Create unified cart item structure:
+
+{
+ sku,
+ name,
+ price,
+ quantity,
+ width,
+ height,
+ length,
+ weight
+}
+
+Cart must store:
+
+items
+subtotal
+shipping_price
+discount
+total
+
+Totals must recalculate when shipping or coupon changes.
+
+--------------------------------------------------
+
+PART 6 — COUPON SUPPORT
+
+Prepare coupon input field.
+
+When user enters coupon code:
+
+call ERP endpoint:
+
+POST /api/store/coupon/validate
+
+Payload:
+
+{
+ code,
+ subtotal,
+ items
+}
+
+Apply returned discount.
+
+--------------------------------------------------
+
+PART 7 — ORDER PAYLOAD STRUCTURE
+
+Before payment, the website must generate an order payload to send to ERP.
+
+Example:
+
+{
+ customer:{
+  name,
+  email,
+  cpf_cnpj,
+  phone
+ },
+ address:{
+  cep,
+  street,
+  number,
+  complement,
+  neighborhood,
+  city,
+  state
+ },
+ items:[
+  {
+   sku,
+   name,
+   price,
+   quantity
+  }
+ ],
+ shipping:{
+  method,
+  service_id,
+  price
+ },
+ payment:{
+  method,
+  status:"pending"
+ },
+ source:"website"
+}
+
+--------------------------------------------------
+
+PART 8 — MERCADO PAGO COMPATIBILITY
+
+Do not remove the current Mercado Pago integration.
+
+The website must still allow:
+
+PIX
+Credit Card
+Boleto
+Installments
+
+But after payment, the ERP will process the order.
+
+Website must store:
+
+payment_id
+payment_status
+
+--------------------------------------------------
+
+PART 9 — ORDER CREATION
+
+Before redirecting to payment, send order draft to ERP.
+
+Endpoint to be used later:
+
+POST /api/store/order
+
+ERP will return:
+
+{
+ order_id,
+ external_reference
+}
+
+Store external_reference to link with payment.
+
+--------------------------------------------------
+
+PART 10 — ORDER TRACKING PAGE
+
+Create future-ready tracking page.
+
+It will call ERP endpoint:
+
+GET /api/store/order/:id
+
+Display:
+
+order status
+shipping carrier
+tracking code
+invoice info
+
+--------------------------------------------------
+
+PART 11 — ENV VARIABLES
+
+Add support for:
+
+ERP_API_URL
+ERP_PUBLIC_API_KEY
+
+Website must use these variables for ERP requests.
+
+--------------------------------------------------
+
+PART 12 — SECURITY
+
+Validate:
+
+CPF format
+email format
+CEP format
+required address fields
+stock availability before checkout
+
+Never expose ERP private tokens.
+
+--------------------------------------------------
+
+PART 13 — CHECKOUT UX
+
+Improve checkout flow:
+
+Step 1 — Personal data  
+Step 2 — Address  
+Step 3 — Shipping  
+Step 4 — Payment  
+
+Totals must update dynamically.
+
+--------------------------------------------------
+
+PART 14 — FINAL TEST
+
+Verify that:
+
+Products load correctly
+Stock can be checked
+Shipping calculation UI works
+Coupon input works
+Cart totals update correctly
+Checkout still works with Mercado Pago
+
+No direct integrations with Tiny or Melhor Envio should exist.
+
+Everything must be prepared to connect later with ERP API.

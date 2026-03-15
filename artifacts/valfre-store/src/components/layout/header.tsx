@@ -95,7 +95,7 @@ export function Header() {
               <span className="text-secondary font-semibold">Parcelamos em 12x</span>
             </div>
             <div className="flex items-center gap-4">
-              <a href="https://melhorrastreio.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">Rastreie seu pedido</a>
+              <Link href="/rastreio" className="hover:text-secondary transition-colors">Rastreie seu pedido</Link>
               <span className="opacity-40">|</span>
               <Link href="/lojas" className="hover:text-secondary transition-colors">Nossas Lojas</Link>
               <span className="opacity-40">|</span>

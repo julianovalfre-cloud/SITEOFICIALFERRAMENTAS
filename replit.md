@@ -61,10 +61,42 @@ artifacts-monorepo/
 - `/categoria/:slug` — Category listing with filters and pagination
 - `/produto/:slug` — Product detail with gallery, specs, related products
 - `/carrinho` — Shopping cart
-- `/checkout` — Multi-step checkout (PIX, Boleto, Credit Card)
+- `/checkout` — 4-step checkout (Dados → Endereço → Frete → Pagamento) + coupon support
 - `/pedido/:id` — Order confirmation
+- `/rastreio` and `/rastreio/:id` — Order tracking page (status timeline, carrier, tracking code, NF-e)
+- `/login`, `/cadastro` — Auth pages (personal & business accounts)
+- `/minha-conta` — Account dashboard (10 tabs)
+- `/ajuda` — Help center with FAQ + search
+- `/politica-privacidade`, `/politica-devolucao`, `/garantia`, `/politica-entrega`, `/termos` — Policy pages
 
-## API Routes
+## ERP Integration Architecture
+
+```
+Website (frontend)
+↓ calls API server
+API Server (proxy layer)
+↓ when ERP_API_URL is set
+ERP API (future external service)
+↓
+Tiny ERP / Mercado Pago / Melhor Envio / SEFAZ
+```
+
+**ERP proxy routes (new, all under `/api/store/...`):**
+- `GET  /api/store/products` — Product list from ERP (fallback: local DB)
+- `GET  /api/store/products/:slug` — Product detail from ERP
+- `GET  /api/store/stock/:sku` — Stock check from ERP
+- `POST /api/store/shipping/calculate` — Shipping options (local pickup + carriers)
+- `POST /api/store/coupon/validate` — Coupon validation (mock coupons in dev)
+- `POST /api/store/order` — Create ERP order draft (returns order_id + external_reference)
+- `GET  /api/store/order/:id` — Order details from ERP
+- `GET  /api/store/order/:id/tracking` — Tracking info from ERP
+
+**Key files:**
+- `artifacts/api-server/src/services/erpClient.ts` — ERP HTTP client (uses ERP_API_URL + ERP_PUBLIC_API_KEY)
+- `artifacts/api-server/src/routes/erp.ts` — ERP proxy routes with local fallbacks
+- `artifacts/valfre-store/src/services/erpApi.ts` — Frontend ERP client
+
+## API Routes (existing)
 
 - `GET /api/products` — List products (category, search, price, sort, page filters)
 - `GET /api/products/featured` — Featured products for homepage

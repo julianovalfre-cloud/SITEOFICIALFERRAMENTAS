@@ -69,9 +69,7 @@ export function Footer() {
               </li>
               <li className="pt-2">
                 <a
-                  href="https://melhorrastreio.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/rastreio"
                   className="inline-flex items-center gap-2 bg-secondary/20 hover:bg-secondary text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors"
                 >
                   📦 Rastreie seu pedido

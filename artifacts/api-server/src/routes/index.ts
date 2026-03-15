@@ -6,10 +6,12 @@ import cartRouter from "./cart";
 import checkoutRouter from "./checkout";
 import ordersRouter from "./orders";
 import webhooksRouter from "./webhooks";
+import erpRouter from "./erp";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(erpRouter);
 router.use(productsRouter);
 router.use(categoriesRouter);
 router.use(cartRouter);
