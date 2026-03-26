@@ -9,6 +9,7 @@ import webhooksRouter from "./webhooks";
 import erpRouter from "./erp";
 import integrationRouter from "./integration";
 import siteIntegracaoRoutes from "./integracoes/site";
+import integracoesHealthRouter from "./integracoes/health";
 
 const router: IRouter = Router();
 
@@ -16,6 +17,7 @@ router.use(healthRouter);
 router.use(erpRouter);
 router.use(integrationRouter);
 router.use("/integracoes/site", siteIntegracaoRoutes);
+router.use("/integracoes/health", integracoesHealthRouter);
 router.use(productsRouter);
 router.use(categoriesRouter);
 router.use(cartRouter);
