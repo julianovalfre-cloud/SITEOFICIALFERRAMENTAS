@@ -64,3 +64,9 @@ timeoutMs = 20000
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.development]
+SITE_API_TOKEN = "valfre_site_token_dev_2024"
+VITE_SITE_API_TOKEN = "valfre_site_token_dev_2024"

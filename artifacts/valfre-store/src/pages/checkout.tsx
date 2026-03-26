@@ -210,6 +210,20 @@ export default function CheckoutPage() {
         console.warn("[ERP] createOrder failed — proceeding with local checkout");
       }
 
+      try {
+        const apiBase = import.meta.env.BASE_URL.replace(/\/$/, "");
+        await fetch(`${apiBase}/api/integracoes/site/pedido`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-token": import.meta.env.VITE_SITE_API_TOKEN || "",
+          },
+          body: JSON.stringify({ ...orderPayload, erp_reference: erpOrderRef }),
+        });
+      } catch {
+        console.warn("[integracoes/site] Falha ao notificar integração — continuando");
+      }
+
       const res = await createMutation.mutateAsync({
         data: {
           sessionId,

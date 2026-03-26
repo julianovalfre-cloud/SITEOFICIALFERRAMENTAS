@@ -1,0 +1,129 @@
+🚀 PROMPT COMPLETO PARA REPLIT
+Analise a estrutura atual e respeite exatamente o que já existe.
+
+Este projeto já possui:
+- artifacts/valfre-store = frontend do site
+- artifacts/api-server = backend/api
+
+NÃO criar outro projeto.
+NÃO criar outro backend.
+NÃO mudar arquitetura.
+
+Objetivo:
+Preparar integração do SITE com o ERP.
+
+Escopo:
+1. Enviar pedidos do site para o ERP
+2. Receber:
+   - status do pedido
+   - estoque
+   - preço
+   - produto
+
+Regras:
+- NÃO alterar layout
+- NÃO refatorar sistema inteiro
+- trabalhar em bloco pequeno
+- usar estrutura atual
+
+Implementar:
+
+BACKEND (artifacts/api-server)
+
+1) Criar middleware de autenticação da integração
+2) Criar rota /integracoes/site
+3) Criar endpoints:
+   - POST /integracoes/site/pedido
+   - POST /integracoes/site/webhook/status
+   - POST /integracoes/site/webhook/estoque
+   - POST /integracoes/site/webhook/preco
+   - POST /integracoes/site/webhook/produto
+
+FRONTEND (artifacts/valfre-store)
+
+- No momento do checkout:
+  fazer POST para /integracoes/site/pedido
+
+Resposta final:
+- listar arquivos criados
+- listar arquivos alterados
+- código completo
+- como testar
+📦 CÓDIGOS QUE O REPLIT DEVE CRIAR
+1. artifacts/api-server/src/middlewares/siteAuth.ts
+import { Request, Response, NextFunction } from "express";
+
+export function siteAuth(req: Request, res: Response, next: NextFunction) {
+  const token = req.headers["x-api-token"];
+
+  if (!token || token !== process.env.SITE_API_TOKEN) {
+    return res.status(401).json({ error: "Não autorizado" });
+  }
+
+  next();
+}
+2. artifacts/api-server/src/routes/integracoes/site.ts
+import { Router } from "express";
+import { siteAuth } from "../../middlewares/siteAuth";
+
+const router = Router();
+
+// RECEBER PEDIDO DO SITE
+router.post("/pedido", siteAuth, async (req, res) => {
+  const pedido = req.body;
+
+  console.log("Pedido recebido do site:", pedido);
+
+  // TODO: integrar com módulo de pedidos
+
+  res.json({ success: true });
+});
+
+// RECEBER STATUS (caso use retorno)
+router.post("/webhook/status", async (req, res) => {
+  console.log("Status recebido:", req.body);
+  res.json({ ok: true });
+});
+
+// RECEBER ESTOQUE
+router.post("/webhook/estoque", async (req, res) => {
+  console.log("Estoque recebido:", req.body);
+  res.json({ ok: true });
+});
+
+// RECEBER PREÇO
+router.post("/webhook/preco", async (req, res) => {
+  console.log("Preço recebido:", req.body);
+  res.json({ ok: true });
+});
+
+// RECEBER PRODUTO
+router.post("/webhook/produto", async (req, res) => {
+  console.log("Produto recebido:", req.body);
+  res.json({ ok: true });
+});
+
+export default router;
+3. ALTERAR artifacts/api-server/src/server.ts
+
+Adicionar:
+
+import siteIntegracaoRoutes from "./routes/integracoes/site";
+
+app.use("/integracoes/site", siteIntegracaoRoutes);
+4. .env (no api-server)
+SITE_API_TOKEN=seu_token_super_secreto
+🌐 FRONTEND (SITE)
+5. ALTERAR CHECKOUT (exemplo)
+Arquivo (ajustar onde finaliza pedido)
+
+artifacts/valfre-store/src/...checkout.ts
+
+await fetch("/integracoes/site/pedido", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-token": "seu_token_super_secreto"
+  },
+  body: JSON.stringify(pedido)
+});
