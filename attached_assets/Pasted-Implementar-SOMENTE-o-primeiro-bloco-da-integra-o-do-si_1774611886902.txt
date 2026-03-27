@@ -1,0 +1,92 @@
+Implementar SOMENTE o primeiro bloco da integração do site com o ERP: sincronização de produtos.
+
+CONTEXTO
+- O frontend do site já consome a API local /products
+- A rota local POST /products já faz upsert em productsTable
+- O ERP já está validado em produção com:
+  GET /api/public/v2/produtos
+  Authorization: Bearer erpbz_...
+
+OBJETIVO
+Buscar os produtos do ERP e salvar na tabela local do site, sem alterar o frontend.
+
+REGRAS
+1. NÃO reescrever o sistema inteiro
+2. NÃO alterar o frontend
+3. NÃO mudar checkout, pedido, cupom ou frete
+4. Fazer apenas o bloco de sincronização de catálogo
+5. Manter a arquitetura atual
+
+O QUE FAZER
+
+1. Ajustar o client do ERP no backend do site
+Arquivo:
+artifacts/api-server/src/services/erpClient.ts
+
+- parar de usar X-Api-Key para produtos
+- usar Authorization: Bearer <token>
+- ler as envs:
+  ERP_API_URL
+  ERP_PUBLIC_BEARER_TOKEN
+- criar função para buscar:
+  GET /api/public/v2/produtos
+
+2. Mapear resposta do ERP para o formato do site
+Resposta atual do ERP:
+{
+  "data": [
+    {
+      "id": "...",
+      "nome": "teste",
+      "sku": null,
+      "preco": 0,
+      "ativo": true
+    }
+  ],
+  "count": 1
+}
+
+Mapear para o payload usado pelo POST /products do site:
+{
+  sku,
+  name,
+  slug,
+  description,
+  price,
+  stock,
+  images,
+  status,
+  category,
+  categorySlug,
+  brand
+}
+
+Regras do mapeamento:
+- sku: usar sku do ERP; se vier null, usar "ERP-" + id
+- name: usar nome
+- slug: gerar a partir de nome; se duplicado, complementar com id curto
+- price: usar preco
+- stock: usar 0 por enquanto
+- status: ativo ? "active" : "inactive"
+- images: []
+- category: "Geral"
+- categorySlug: "geral"
+- brand: null
+- description: ""
+
+3. Criar um endpoint manual de sincronização
+Arquivo novo ou no router já existente do backend:
+criar POST /integration/sync-products-from-erp
+
+Esse endpoint deve:
+- buscar os produtos do ERP
+- fazer upsert local na tabela productsTable
+- retornar quantidade importada
+
+4. Não alterar o frontend
+A home já consome /products local, então ao sincronizar os dados o site já deve refletir os produtos.
+
+ENTREGA FINAL
+- listar exatamente os arquivos alterados
+- mostrar como configurar as envs
+- mostrar como testar o endpoint manual de sync

@@ -1,5 +1,6 @@
 const ERP_API_URL = process.env.ERP_API_URL;
 const ERP_PUBLIC_API_KEY = process.env.ERP_PUBLIC_API_KEY;
+const ERP_PUBLIC_BEARER_TOKEN = process.env.ERP_PUBLIC_BEARER_TOKEN;
 
 function erpAvailable(): boolean {
   return !!ERP_API_URL;
@@ -23,6 +24,41 @@ async function erpFetch(path: string, options: RequestInit = {}) {
     throw new Error(`ERP error ${res.status}: ${text}`);
   }
   return res.json();
+}
+
+async function erpBearerFetch(path: string, options: RequestInit = {}) {
+  if (!ERP_API_URL) throw new Error("ERP_API_URL not configured");
+  if (!ERP_PUBLIC_BEARER_TOKEN) throw new Error("ERP_PUBLIC_BEARER_TOKEN not configured");
+
+  const url = `${ERP_API_URL.replace(/\/$/, "")}${path}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${ERP_PUBLIC_BEARER_TOKEN}`,
+    ...(options.headers as Record<string, string>),
+  };
+  const res = await fetch(url, { ...options, headers });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`ERP error ${res.status}: ${text}`);
+  }
+  return res.json();
+}
+
+export interface ErpPublicProduct {
+  id: string;
+  nome: string;
+  sku: string | null;
+  preco: number;
+  ativo: boolean;
+}
+
+export interface ErpPublicProductsResponse {
+  data: ErpPublicProduct[];
+  count: number;
+}
+
+export async function fetchErpPublicProducts(): Promise<ErpPublicProductsResponse> {
+  return erpBearerFetch("/api/public/v2/produtos");
 }
 
 export interface ErpProduct {

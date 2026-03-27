@@ -11,6 +11,7 @@ import integrationRouter from "./integration";
 import siteIntegracaoRoutes from "./integracoes/site";
 import integracoesHealthRouter from "./integracoes/health";
 import integracoesProdutosRouter from "./integracoes/produtos";
+import integracoesSyncRouter from "./integracoes/sync";
 
 const router: IRouter = Router();
 
@@ -20,6 +21,7 @@ router.use(integrationRouter);
 router.use("/integracoes/site", siteIntegracaoRoutes);
 router.use("/integracoes/health", integracoesHealthRouter);
 router.use("/integracoes/produtos", integracoesProdutosRouter);
+router.use("/integracoes", integracoesSyncRouter);
 router.use(productsRouter);
 router.use(categoriesRouter);
 router.use(cartRouter);
