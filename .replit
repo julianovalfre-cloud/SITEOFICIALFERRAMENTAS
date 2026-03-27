@@ -56,3 +56,5 @@ VITE_SITE_API_TOKEN = "valfre_site_token_dev_2024"
 
 [userenv.shared]
 SITE_API_TOKEN = "valfre_site_token_dev_2024"
+ERP_API_URL = "https://order-management-system-atacadaotaqui.replit.app"
+ERP_PUBLIC_BEARER_TOKEN = "erpbz_bd94381dd27f39c2ef02f2e61fa67c062d5fffc771df77ace70c7ff0f3bffe2d"
